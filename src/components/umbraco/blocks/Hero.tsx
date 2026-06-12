@@ -94,7 +94,7 @@ function HeroButton({
   );
 }
 
-export default function Hero({ content }: BlockComponentProps) {
+export default function Hero({ content, settings }: BlockComponentProps) {
   const {
     media,
     preHeading,
@@ -110,6 +110,9 @@ export default function Hero({ content }: BlockComponentProps) {
     scrollIcon,
   } = content as unknown as HeroContent;
 
+  const { height, backgroundColor } = (settings ?? {}) as unknown as HeroSettings;
+  const minHeight = `${height ?? 80}vh`;
+
   const image = media?.[0];
   const currentWord = useAnimatedWord(animatedWords);
 
@@ -123,7 +126,10 @@ export default function Hero({ content }: BlockComponentProps) {
   };
 
   return (
-    <section className="relative min-h-[80vh] w-full overflow-hidden bg-background-secondary text-text-light">
+    <section
+      className="relative w-full overflow-hidden bg-background-secondary text-text-light"
+      style={{ minHeight }}
+    >
       {image ? (
         <>
           <UmbracoImage
@@ -137,47 +143,58 @@ export default function Hero({ content }: BlockComponentProps) {
         </>
       ) : null}
 
-      <div className="relative z-10 mx-auto flex min-h-[80vh] max-w-6xl flex-col justify-center px-6 py-24">
-        {preHeading ? (
-          <p className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-text-light/80">
-            {preHeading}
-          </p>
-        ) : null}
+      <div
+        className="relative z-10 mx-auto flex max-w-6xl flex-col justify-center px-6 py-24"
+        style={{ minHeight }}
+      >
+        <div
+          className={cn(
+            backgroundColor &&
+              "rounded-lg bg-background-secondary/80 p-8 backdrop-blur-sm md:p-12",
+          )}
+        >
+          {preHeading ? (
+            <p className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-text-light/80">
+              {preHeading}
+            </p>
+          ) : null}
 
-        {heading ? (
-          <h1 className="text-4xl font-semibold leading-tight tracking-tight md:text-6xl">
-            {hasToken ? (
-              <>
-                {headingParts[0]}
-                <span
-                  key={currentWord}
-                  className="inline-block animate-in fade-in slide-in-from-bottom-2 duration-500 text-primary"
-                >
-                  {currentWord}
-                </span>
-                {headingParts[1]}
-              </>
-            ) : (
-              heading
-            )}
-          </h1>
-        ) : null}
+          {heading ? (
+            <h1 className="text-4xl font-semibold leading-tight tracking-tight md:text-6xl">
+              {hasToken ? (
+                <>
+                  {headingParts[0]}
+                  <span
+                    key={currentWord}
+                    className="inline-block animate-in fade-in slide-in-from-bottom-2 duration-500 text-primary"
+                  >
+                    {currentWord}
+                  </span>
+                  {headingParts[1]}
+                </>
+              ) : (
+                heading
+              )}
+            </h1>
+          ) : null}
 
-        {text ? (
-          <RichTextRenderer
-            value={text}
-            className="mt-6 max-w-2xl text-lg text-text-light/90 [&_p]:text-text-light/90"
-          />
-        ) : null}
+          {text ? (
+            <RichTextRenderer
+              value={text}
+              className="mt-6 max-w-2xl text-lg text-text-light/90 [&_p]:text-text-light/90"
+            />
+          ) : null}
 
-        {(buttonOne?.[0] || buttonTwo?.[0] || buttonThree?.[0]) && (
-          <div className="mt-8 flex flex-wrap gap-3">
-            <HeroButton link={buttonOne?.[0]} color={buttonOneColor} />
-            <HeroButton link={buttonTwo?.[0]} color={buttonTwoColor} />
-            <HeroButton link={buttonThree?.[0]} color={buttonThreeColor} />
-          </div>
-        )}
+          {(buttonOne?.[0] || buttonTwo?.[0] || buttonThree?.[0]) && (
+            <div className="mt-8 flex flex-wrap gap-3">
+              <HeroButton link={buttonOne?.[0]} color={buttonOneColor} />
+              <HeroButton link={buttonTwo?.[0]} color={buttonTwoColor} />
+              <HeroButton link={buttonThree?.[0]} color={buttonThreeColor} />
+            </div>
+          )}
+        </div>
       </div>
+
 
       {scrollIcon ? (
         <button
