@@ -162,3 +162,31 @@ Keys: settings are always optional (editors may not fill them in); fallbacks mus
 Per-block prop shapes are derived from the generated Delivery API types in `src/integrations/umbraco/types.ts`. When the Delivery API exposes per-element-type schemas (Umbraco 14+), import them directly. Otherwise hand-write a small interface per block matching the properties the editor exposes, and refine over time.
 
 Note: if `BlockComponentProps<TContent extends JsonObject>` is constrained to `JsonObject`, your per-block interface must satisfy the index signature — easiest is to drop the generic and cast `content as unknown as HeroContent` inside the component, or remove the `extends JsonObject` constraint on the registry's generic.
+
+## Wrapper blocks with nested block lists
+
+Some blocks own their own Block List inside a property (e.g. `cards` has a `cardsList`). When this is the case, the wrapper component iterates `cardsList.items` itself and forwards each item's `content.properties` + `settings.properties` to the child component **directly**, rather than delegating to `BlockListRenderer`. The wrapper owns the flex/grid container around the children so it can apply per-row layout (gap, wrap, alignment) without `BlockListRenderer`'s neutral pass-through.
+
+Both the wrapper alias (`cards`) and the leaf alias (`card`) are still registered in `registry.ts` — registering the leaf lets it be reused standalone or via `BlockListRenderer` elsewhere.
+
+### Width-as-flex-basis with mobile fallback
+
+`cardSettings.width` ("25%" | "33%" | "50%" | "100%") drives desktop layout; mobile always stacks full width. The wrapper uses `flex flex-wrap gap-6`. Each card subtracts the gap from its basis so widths actually fit per row:
+
+```tsx
+const basis = width ? `calc(${width} - 1rem)` : "100%";
+
+return (
+  <div
+    style={{ flexBasis: basis, maxWidth: basis }}
+    className="w-full flex-shrink-0 flex-grow-0 max-md:!basis-full max-md:!max-w-full"
+  >
+    {/* card body */}
+  </div>
+);
+```
+
+Key bits:
+- `max-md:!basis-full max-md:!max-w-full` forces full width below the md breakpoint regardless of CMS-set width.
+- Subtracting `1rem` (matched to the wrapper's `gap-6` ≈ 1.5rem with some slack) prevents three 33% cards + two gaps from overflowing.
+- `flex-shrink-0 flex-grow-0` plus `maxWidth` keeps the card from growing into adjacent gaps when only one card sits on a row.
