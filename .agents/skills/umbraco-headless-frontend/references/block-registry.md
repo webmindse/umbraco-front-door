@@ -104,7 +104,7 @@ Visible in dev so missing blocks are obvious. Silent in production so a missing 
 
 - **`<RichTextRenderer html={...} />`** — Umbraco returns rich text as either HTML string or a structured `markup` field. Render with `dangerouslySetInnerHTML` after sanitising (use `isomorphic-dompurify` if untrusted). Style via a `prose` wrapper.
 - **`<UmbracoLink link={...}>{children}</UmbracoLink>`** — accepts Umbraco's link picker shape (`{ url, target, linkType: "Content" | "External" | "Media", ... }`). Internal links route through `<Link to={...} />`; external/media use a plain `<a>` with `target` and `rel="noopener"` when needed.
-- **`<UmbracoImage media={...} width height />`** — accepts Umbraco's media picker shape. Resolves the `url` against `UMBRACO_BASE_URL` if relative, appends `?width=&height=&rmode=crop` and the focal point if present, sets `loading="lazy"`, and applies `alt` from the media item.
+- **`<UmbracoImage media={...} width height />`** — accepts Umbraco's media picker shape. Resolves the `url` against `VITE_UMBRACO_PUBLIC_BASE_URL` if relative (NOT the server-only `UMBRACO_BASE_URL` — that's not in the client bundle), appends `?width=&height=&rmode=crop` and the focal point if present, sets `loading="lazy"`, and applies `alt` from the media item.
 
 ## Adding a new block
 
@@ -117,3 +117,5 @@ That's the whole change. No router updates, no schema migrations, no per-page wi
 ## Typing block props
 
 Per-block prop shapes are derived from the generated Delivery API types in `src/integrations/umbraco/types.ts`. When the Delivery API exposes per-element-type schemas (Umbraco 14+), import them directly. Otherwise hand-write a small interface per block matching the properties the editor exposes, and refine over time.
+
+Note: if `BlockComponentProps<TContent extends JsonObject>` is constrained to `JsonObject`, your per-block interface must satisfy the index signature — easiest is to drop the generic and cast `content as unknown as HeroContent` inside the component, or remove the `extends JsonObject` constraint on the registry's generic.

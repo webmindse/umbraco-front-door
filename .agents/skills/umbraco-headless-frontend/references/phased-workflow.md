@@ -5,7 +5,7 @@ Each phase produces a reviewable artifact. Hand back to the user after each phas
 ## Phase 1 — Typed API client + server-fn proxy
 
 Deliverables:
-- `src/integrations/umbraco/types.ts` — generated via `scripts/generate-types.sh` from the Delivery API swagger (`${UMBRACO_BASE_URL}/umbraco/delivery/api/v2/swagger.json`) using `openapi-typescript`.
+- `src/integrations/umbraco/types.ts` — generated via `scripts/generate-types.sh` from the Delivery API swagger (`${UMBRACO_BASE_URL}/umbraco/delivery/api/v2/swagger.json`) using `openapi-typescript`. If swagger isn't exposed on the instance, hand-roll a minimal types file covering the shapes the app consumes.
 - `src/integrations/umbraco/client.server.ts` — a thin `fetch` wrapper that injects the `Api-Key` header from `process.env.UMBRACO_API_KEY` and optional `Start-Item` / `Accept-Language` headers. Server-only.
 - `src/lib/umbraco.functions.ts` — `createServerFn` exports: `getContentByRoute({ path })`, `getContentById({ id })`, `getChildren({ id })`, `getByContentType({ contentType })`. See `server-fn-proxy.md`.
 - `src/routes/api/_debug.umbraco.tsx` (or a temporary debug page) — fetches a known route and dumps JSON. Used to confirm connectivity before Phase 2.
@@ -32,7 +32,7 @@ The core of the build. Deliverables:
 - Supporting renderers in `src/components/umbraco/`:
   - `<RichTextRenderer />` — renders Umbraco rich-text JSON safely.
   - `<UmbracoLink />` — handles internal/external/media link types from Umbraco's link picker.
-  - `<UmbracoImage />` — resolves relative media URLs against `UMBRACO_BASE_URL`, applies `width`/`height`/`focal point` query params, lazy-loads.
+  - `<UmbracoImage />` — resolves relative media URLs against `VITE_UMBRACO_PUBLIC_BASE_URL` (NOT the server-only `UMBRACO_BASE_URL`), applies `width`/`height`/`focal point` query params, lazy-loads.
 - A dynamic catch-all route (`src/routes/$.tsx`) that calls `getContentByRoute` with the splat path, then renders the page's block list/grid.
 
 **Build incrementally — one block at a time**, with a review checkpoint after each block (or small batch). The user should see each block rendered against real content before moving on.
