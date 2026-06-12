@@ -103,11 +103,10 @@ export default function Card({ content, settings }: BlockComponentProps) {
     centerContent && "text-center",
   );
 
-  const innerStyle: React.CSSProperties = {
-    flexBasis: width,
-    flexGrow: 0,
-    flexShrink: 0,
-  };
+  // Subtract the flex gap so widths like 33%/50% actually fit per row alongside the gap-6 wrapper.
+  const innerStyle: React.CSSProperties = width
+    ? { flexBasis: `calc(${width} - 1rem)`, flexGrow: 0, flexShrink: 0 }
+    : { flexGrow: 1, flexShrink: 1, flexBasis: "100%" };
 
   const mediaNode = showIcon ? (
     <div
@@ -121,13 +120,13 @@ export default function Card({ content, settings }: BlockComponentProps) {
       </div>
     </div>
   ) : media ? (
-    <div className={cn("relative w-full", mediaLeft ? "md:h-full" : "aspect-video")}>
-      <UmbracoImage
-        media={media}
-        width={960}
-        fill
-        alt={media.name}
-      />
+    <div
+      className={cn(
+        "relative w-full",
+        mediaLeft ? "aspect-video md:aspect-auto md:min-h-[12rem] md:h-full" : "aspect-video",
+      )}
+    >
+      <UmbracoImage media={media} width={960} fill alt={media.name} />
     </div>
   ) : null;
 
