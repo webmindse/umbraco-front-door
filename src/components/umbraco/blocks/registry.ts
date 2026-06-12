@@ -2,6 +2,8 @@ import type { ComponentType } from "react";
 
 import type { BlockItem, JsonObject } from "@/integrations/umbraco/types";
 
+import Card from "./Card";
+import Cards from "./Cards";
 import Hero from "./Hero";
 
 export interface BlockComponentProps<
@@ -25,4 +27,6 @@ export type BlockComponent = ComponentType<BlockComponentProps>;
  */
 export const blockRegistry: Record<string, BlockComponent> = {
   hero: Hero as BlockComponent,
+  cards: Cards as BlockComponent,
+  card: Card as BlockComponent,
 };
