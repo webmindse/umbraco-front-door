@@ -2,6 +2,8 @@ import type { ComponentType } from "react";
 
 import type { BlockItem, JsonObject } from "@/integrations/umbraco/types";
 
+import Hero from "./Hero";
+
 export interface BlockComponentProps<
   TContent extends JsonObject = JsonObject,
   TSettings extends JsonObject = JsonObject,
@@ -22,6 +24,5 @@ export type BlockComponent = ComponentType<BlockComponentProps>;
  * line here.
  */
 export const blockRegistry: Record<string, BlockComponent> = {
-  // Populated in subsequent batches. Until an alias is registered, the
-  // BlockListRenderer falls back to <MissingBlock /> in dev.
+  hero: Hero as BlockComponent,
 };

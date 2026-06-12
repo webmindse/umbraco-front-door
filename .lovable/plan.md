@@ -1,69 +1,42 @@
-# Plan: Draft `umbraco-headless-frontend` skill
+# Plan: Hero block component
 
-Create a reusable, generalized skill that teaches a future agent how to build a TanStack Start frontend on top of any Umbraco 12+ Delivery API instance. Specifics (aliases, colors, fonts, base URL) are gathered fresh per project in Phase 0 — the skill teaches the *pattern*, not this project's values.
+Build the first real block component (`hero`) and wire it into the registry so the `/sv` page replaces its top "Missing block: hero" card with a rendered hero section.
 
-## Location
+## Files
 
-`.agents/skills/umbraco-headless-frontend/` (draft). Applied via `skills--apply_draft` once written.
+**New: `src/components/umbraco/blocks/Hero.tsx`**
 
-## Files to create
+A typed block component matching the payload shape:
 
-```text
-.agents/skills/umbraco-headless-frontend/
-├── SKILL.md
-├── references/
-│   ├── phased-workflow.md
-│   ├── server-fn-proxy.md
-│   ├── block-registry.md
-│   └── phase-0-checklist.md
-└── scripts/
-    └── generate-types.sh
+- `media: UmbracoMedia[]` — render first item as full-bleed background image via `<UmbracoImage>` (respect focal point, lazy=false for above-the-fold, fetchPriority="high").
+- `preHeading: string` — small eyebrow text above the heading.
+- `heading: string` + `animatedWords: string[]` — heading contains the literal token `#animatedWords`; split on that token and render a rotating word in its place (CSS-only fade/slide cycle through the array, ~2.5s per word). No JS animation library — simple `setInterval` + state.
+- `text: { markup, blocks }` — render via existing `<RichTextRenderer>`.
+- `buttonOne/Two/Three` — each is a single-item link picker array. Render via `<UmbracoLink>` wrapped in a shadcn `<Button>`. Map color to button variant:
+  - `Primary` → `default` (uses `--primary`)
+  - `Secondary` → `secondary` (uses `--secondary`)
+  - `Transparent` → `outline` with transparent background
+- `scrollIcon: boolean` — when true, render a chevron-down indicator at the bottom that scrolls one viewport down on click.
+
+Layout: full-width section, min-height ~80vh, background image with dark overlay for contrast, content centered/left-aligned in a max-width container, Fira Sans, light text on dark overlay.
+
+**Edit: `src/components/umbraco/blocks/registry.ts`**
+
+Add one line:
+```ts
+import Hero from "./Hero";
+// ...
+export const blockRegistry = { hero: Hero, ... };
 ```
 
-### SKILL.md
-YAML frontmatter:
-- `name: umbraco-headless-frontend`
-- `description:` one line — triggers when the user wants to build a frontend against an Umbraco headless / Delivery API backend, especially with Block List / Block Grid content.
+## Technical notes
 
-Body: short overview, when to use, when NOT to use (non-Umbraco CMS, JSON-only API with no block model), and a navigation map pointing to the four reference files. Lists the phased workflow at a high level (Phase 0 inputs → Phase 1 typed client → Phase 2 design shell → Phase 3 dynamic block rendering → Phase 4 nav/globals/polish → Phase 5 forms deferred). Emphasises step-by-step build with review checkpoints.
+- Hero typing: define a local `HeroContent` interface and use `BlockComponentProps<HeroContent>`.
+- Animated word: a small `useAnimatedWord(words)` hook inside the file, no new deps.
+- Buttons array may be empty — guard with `?.[0]`.
+- Image: pass `width={1920}` to the CMS-side resizer through `UmbracoImage`; render at `object-cover` covering the section.
+- Accessibility: `<h1>` for the heading (hero is typically the page H1), `aria-hidden` on the scroll chevron, `prefers-reduced-motion` disables the word cycling.
 
-### references/phase-0-checklist.md
-The intake the agent must run before writing code:
-- `UMBRACO_BASE_URL`, `UMBRACO_API_KEY` (stored as secrets, never in client)
-- List of content type aliases (page types + block types)
-- Google font name(s)
-- Color tokens (hex/oklch)
-- Screenshots of current GUI
-- Preview/published API toggle, culture/language, optional `start-item`
+## Out of scope
 
-### references/phased-workflow.md
-Phase-by-phase generalised workflow with review checkpoints after each phase. Mirrors what we settled on for this project but written generically.
-
-### references/server-fn-proxy.md
-The architectural rule: all Umbraco calls go through `createServerFn`, API key read inside `.handler()` via `process.env`, never exposed to the browser. Includes a canonical example: `getContentByRoute`, `getContentById`, `getChildren`. Notes the auth-protected-server-functions caveats (only call from components or `_authenticated/` loaders).
-
-### references/block-registry.md
-The alias→component registry pattern:
-- `src/components/umbraco/blocks/registry.ts` maps `contentType` string → React component
-- `<BlockListRenderer />` and `<BlockGridRenderer />` iterate the editor-ordered array and dispatch via registry
-- Unknown alias → dev-only `<MissingBlock>` fallback
-- Adding a new block = one new file + one registry line
-- Supporting renderers: `<RichTextRenderer />`, `<UmbracoLink />`, `<UmbracoImage />` (with media URL resolution)
-- TypeScript: derive per-block prop types from generated Delivery API types
-
-### scripts/generate-types.sh
-Helper that runs `openapi-typescript` against `${UMBRACO_BASE_URL}/umbraco/delivery/api/v2/swagger.json` and writes `src/integrations/umbraco/types.ts`. Idempotent; safe to re-run when the schema changes.
-
-## What this skill does NOT encode
-
-- This project's specific aliases, colors, fonts, or base URL — those are Phase 0 inputs for each new project.
-- Lovable Cloud, auth, or database wiring (Umbraco is the source of truth).
-- Form handling — deferred (Phase 5) and project-specific.
-
-## Hand-off
-
-After writing all files, call `skills--apply_draft` with path `.agents/skills/umbraco-headless-frontend` to activate it. Future projects can then trigger it by name or by describing an Umbraco headless build.
-
-## Note on timing
-
-Drafting now captures the pattern before we start building. We can revise the skill after Phase 3 lands if the actual implementation reveals refinements — updating a skill is the same flow (edit draft, re-apply).
+Other block aliases (`cards`, `accordion`, etc.) — handled in subsequent batches once you confirm the hero looks right.
