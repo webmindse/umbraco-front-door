@@ -55,7 +55,7 @@ function UmbracoDebugPage() {
         {isFetching && <p>Loading…</p>}
         {error && (
           <pre className="rounded bg-destructive/10 p-3 text-destructive">
-            {String(error)}
+            {error instanceof Error ? error.message : String(error)}
           </pre>
         )}
         {data === null && !isFetching && <p>404 — no content at that route.</p>}

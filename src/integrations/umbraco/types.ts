@@ -4,6 +4,9 @@
 // not exposed on this Umbraco Cloud instance, so we model the shapes we
 // actually consume. If swagger is later enabled, replace this file with the
 // output of `scripts/generate-types.sh` (skill-bundled).
+//
+// All `properties` bags are typed as JSON-serializable maps so values flow
+// across the TanStack Start server-fn RPC boundary.
 
 export type JsonValue =
   | string
@@ -13,6 +16,8 @@ export type JsonValue =
   | JsonValue[]
   | { [key: string]: JsonValue };
 
+export type JsonObject = { [key: string]: JsonValue };
+
 export interface UmbracoRoute {
   path: string;
   queryString: string | null;
@@ -21,7 +26,7 @@ export interface UmbracoRoute {
 
 export interface UmbracoMedia {
   focalPoint: { left: number; top: number } | null;
-  crops: Array<{ alias: string; width: number; height: number; coordinates?: unknown }>;
+  crops: Array<{ alias: string; width: number; height: number; coordinates: JsonValue }>;
   id: string;
   name: string;
   mediaType: string;
@@ -30,7 +35,7 @@ export interface UmbracoMedia {
   width: number | null;
   height: number | null;
   bytes: number | null;
-  properties: Record<string, unknown>;
+  properties: JsonObject;
 }
 
 export interface UmbracoRichText {
@@ -41,8 +46,8 @@ export interface UmbracoRichText {
 /** A single block inside a Block List or Block Grid. */
 export interface BlockItem<
   TContentType extends string = string,
-  TProps extends Record<string, unknown> = Record<string, unknown>,
-  TSettingsProps extends Record<string, unknown> = Record<string, unknown>,
+  TProps extends JsonObject = JsonObject,
+  TSettingsProps extends JsonObject = JsonObject,
 > {
   content: {
     contentType: TContentType;
@@ -63,7 +68,7 @@ export interface BlockList<T extends BlockItem = BlockItem> {
 /** Generic content item returned by the Delivery API. */
 export interface ContentItem<
   TContentType extends string = string,
-  TProps extends Record<string, unknown> = Record<string, unknown>,
+  TProps extends JsonObject = JsonObject,
 > {
   contentType: TContentType;
   name: string;
@@ -72,7 +77,7 @@ export interface ContentItem<
   route: UmbracoRoute;
   id: string;
   properties: TProps;
-  cultures: Record<string, unknown>;
+  cultures: JsonObject;
 }
 
 export interface ContentResponse<T extends ContentItem = ContentItem> {
