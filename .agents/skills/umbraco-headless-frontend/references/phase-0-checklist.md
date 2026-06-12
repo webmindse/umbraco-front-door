@@ -19,19 +19,34 @@ Do not write code until every item below is collected. Ask the user for anything
 - **Preview vs published API** — default to published. Preview requires the `Preview` header and is usually only wired up for an `_authenticated/` preview route.
 - **Culture / language** — single-culture sites can omit; multi-culture sites pass `?culture=xx-XX` to every Delivery API call.
 - **`start-item`** — for multi-site installations. Passed as the `Start-Item` header.
-- **Media base URL** — usually the same as `UMBRACO_BASE_URL`. Used by `<UmbracoImage />` to resolve relative media URLs.
+
+## Environment variables to write
+
+Write BOTH of these to `.env` in Phase 0/1. Skipping the second one is the #1 cause of broken images in Phase 3:
+
+- **`UMBRACO_BASE_URL`** — server-only. Read by `client.server.ts` for Delivery API calls. Not exposed to the browser.
+- **`VITE_UMBRACO_PUBLIC_BASE_URL`** — client-bundled. Read by `<UmbracoImage>` (and any client code) via `import.meta.env.VITE_UMBRACO_PUBLIC_BASE_URL` to resolve relative `/media/...` URLs that Umbraco returns in JSON. Set this to the same origin as `UMBRACO_BASE_URL` unless media is served from a separate CDN host.
+
+Both go in `.env` (no quotes, no trailing slash):
+
+```
+UMBRACO_BASE_URL=https://cms.example.com
+VITE_UMBRACO_PUBLIC_BASE_URL=https://cms.example.com
+```
+
+After adding/changing the `VITE_*` var, restart the dev server so Vite picks it up.
 
 ## Secrets to register
 
 Use the secrets tool (do not commit to code):
 - `UMBRACO_API_KEY`
 
-`UMBRACO_BASE_URL` is not secret and can live in `.env` / `process.env` as plain config, or be hardcoded in `src/integrations/umbraco/config.server.ts` if it never changes per environment.
+`UMBRACO_BASE_URL` and `VITE_UMBRACO_PUBLIC_BASE_URL` are not secrets (the public origin is visible in image `src` attributes regardless) and live in `.env`.
 
 ## Output of Phase 0
 
 A short written summary, posted back to the user, listing:
-- the base URL,
+- the base URL (and confirmation both env vars are set),
 - confirmation the API key is stored,
 - the alias inventory (page types, block types — both lists),
 - the chosen fonts and color tokens,

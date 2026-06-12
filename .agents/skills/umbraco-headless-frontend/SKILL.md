@@ -1,6 +1,6 @@
 ---
 name: umbraco-headless-frontend
-description: Build a TanStack Start frontend on top of an Umbraco 12+ headless backend that uses the Delivery API with Block List / Block Grid content. Triggers when the user wants to render Umbraco-managed pages where editors can compose pages from an open-ended catalog of block types in any order.
+description: Build a TanStack Start frontend against an Umbraco 12+ Delivery API instance using a phased workflow (typed client → design system → block registry → nav/polish). Use when the backend is Umbraco and pages are composed from Block List or Block Grid editors.
 ---
 
 # Umbraco Headless Frontend
@@ -24,6 +24,7 @@ A reusable, phased workflow for building a TanStack Start frontend against any U
 1. **All Umbraco calls go through `createServerFn`.** The API key is read inside `.handler()` via `process.env.UMBRACO_API_KEY` and never reaches the browser bundle. See `references/server-fn-proxy.md`.
 2. **Block rendering is registry-driven.** A single `registry.ts` maps `contentType` alias → React component. `<BlockListRenderer />` and `<BlockGridRenderer />` iterate the editor-ordered array and dispatch. Adding a new block = one new file + one registry line. See `references/block-registry.md`.
 3. **Types are generated from the Delivery API swagger.** Run `scripts/generate-types.sh` to produce `src/integrations/umbraco/types.ts` via `openapi-typescript`. Per-block prop types are derived from those.
+4. **Two base-URL env vars, not one.** `UMBRACO_BASE_URL` (server, secret-adjacent) is for the server-fn proxy; `VITE_UMBRACO_PUBLIC_BASE_URL` (public) is for the browser to resolve relative `/media/...` URLs in `<img>` tags. Set both in Phase 0.
 
 ## Phased workflow (step-by-step, with review after each phase)
 
@@ -42,6 +43,6 @@ After each phase, hand back to the user for review before starting the next. Ful
 
 - `references/phase-0-checklist.md` — exact intake before any code.
 - `references/phased-workflow.md` — what each phase produces and its review checkpoint.
-- `references/server-fn-proxy.md` — canonical server-fn shape for Umbraco calls.
+- `references/server-fn-proxy.md` — canonical server-fn shape for Umbraco calls, plus the media-URL split (`UMBRACO_BASE_URL` vs `VITE_UMBRACO_PUBLIC_BASE_URL`).
 - `references/block-registry.md` — alias→component registry, renderers, fallback, supporting renderers.
 - `scripts/generate-types.sh` — regenerate Delivery API TypeScript types.

@@ -96,3 +96,16 @@ export const Route = createFileRoute("/$")({
 - Return plain DTOs only (no `Response`, no streams).
 - For 404s from Umbraco, return `null` and let the route throw `notFound()`.
 - Log full provider errors server-side; surface a generic message to the client.
+
+## Media URLs — the two-env-var rule
+
+The Delivery API returns image and media URLs as **relative paths** (e.g. `/media/abc123/photo.jpg`). The server-fn never renders these — the browser does, as `<img src>` and `<a href>`. That means:
+
+- **`UMBRACO_BASE_URL`** (server-only) cannot help the browser; it isn't in the client bundle.
+- A separate **`VITE_UMBRACO_PUBLIC_BASE_URL`** must exist for the client. `<UmbracoImage>` reads it via `import.meta.env.VITE_UMBRACO_PUBLIC_BASE_URL` and prepends it to relative URLs.
+
+Set both in `.env` (see `phase-0-checklist.md`). They typically point at the same origin, but the split lets you serve media from a CDN later without leaking the API host.
+
+**Symptom of a missing `VITE_UMBRACO_PUBLIC_BASE_URL`**: hero/card images 404 from the *preview* origin (e.g. `id-preview--xxx.lovable.app/media/...`) instead of the CMS host. The fix is one env-var line + dev-server restart — no component changes needed.
+
+**Do not** try to base64-encode images client-side to "work around" missing media URLs. Umbraco Cloud serves media publicly; the only thing missing in that failure mode is the host prefix.
