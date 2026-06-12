@@ -12,7 +12,7 @@ import type { BlockComponentProps } from "./registry";
 
 type ButtonColor = "Primary" | "Secondary" | "Transparent" | string;
 
-interface HeroContent extends JsonObject {
+interface HeroContent {
   media?: UmbracoMediaLike[];
   preHeading?: string;
   heading?: string;
