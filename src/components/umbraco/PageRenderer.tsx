@@ -20,20 +20,11 @@ export function PageRenderer({ page }: PageRendererProps) {
     <article>
       {entries.map(([key, value]) => {
         if (looksLikeBlockList(value)) {
-          return (
-            <BlockListRenderer
-              key={key}
-              items={(value as { items: BlockItem[] }).items}
-            />
-          );
+          const list = value as unknown as { items: BlockItem[] };
+          return <BlockListRenderer key={key} items={list.items} />;
         }
         if (looksLikeBlockGrid(value)) {
-          return (
-            <BlockGridRenderer
-              key={key}
-              value={value as { items: never[] } & JsonObject}
-            />
-          );
+          return <BlockGridRenderer key={key} value={value as unknown as JsonObject} />;
         }
         return null;
       })}
