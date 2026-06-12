@@ -101,20 +101,6 @@ export default function Hero({ content }: BlockComponentProps) {
     buttonThreeColor,
     scrollIcon,
   } = content as unknown as HeroContent;
-  const {
-    media,
-    preHeading,
-    heading,
-    animatedWords,
-    text,
-    buttonOne,
-    buttonOneColor,
-    buttonTwo,
-    buttonTwoColor,
-    buttonThree,
-    buttonThreeColor,
-    scrollIcon,
-  } = content;
 
   const image = media?.[0];
   const currentWord = useAnimatedWord(animatedWords);
