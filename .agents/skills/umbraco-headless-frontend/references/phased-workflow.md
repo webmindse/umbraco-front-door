@@ -37,6 +37,8 @@ The core of the build. Deliverables:
 
 **Build incrementally — one block at a time**, with a review checkpoint after each block (or small batch). The user should see each block rendered against real content before moving on.
 
+For each block, also handle its `*Settings` sibling element type if present (e.g. `heroSettings` for `hero`). Type the settings shape, destructure with fallbacks that preserve pre-settings layout, and apply to presentation only (height, background, alignment, theme variant). See `block-registry.md` → "Settings blocks" for the canonical pattern.
+
 Review checkpoint at end of Phase 3: every URL in the Umbraco content tree resolves to a styled page; every block in the catalog renders in editor-defined order; adding a new block in Umbraco requires one new file + one registry line on the frontend.
 
 ## Phase 4 — Navigation + global content + polish
