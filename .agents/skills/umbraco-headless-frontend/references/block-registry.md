@@ -114,6 +114,49 @@ Visible in dev so missing blocks are obvious. Silent in production so a missing 
 
 That's the whole change. No router updates, no schema migrations, no per-page wiring.
 
+## Settings blocks (`*Settings` siblings)
+
+Most block element types in Umbraco have a sibling settings element type, conventionally aliased `<blockAlias>Settings` (e.g. `hero` + `heroSettings`). Editors fill these in via the block's gear icon; Umbraco attaches them as `item.settings` on the block.
+
+The plumbing already exists — `BlockListRenderer` and `BlockGridRenderer` forward `item.settings?.properties` to every block component as the `settings` prop. No per-block plumbing changes needed.
+
+**Pattern, per block:**
+
+1. Declare a `FooSettings` interface alongside `FooContent` in the same file.
+2. Destructure `settings` from `BlockComponentProps` and cast with sensible fallbacks.
+3. Apply settings to **presentation only** (height, background, alignment, theme variant) — never to content semantics.
+
+Canonical reference (`Hero.tsx`):
+
+```ts
+interface HeroSettings {
+  /** Viewport-percent height (0–100). Defaults to 80. */
+  height?: number;
+  /** When true, render a tinted panel behind the text for contrast. */
+  backgroundColor?: boolean;
+}
+
+export default function Hero({ content, settings }: BlockComponentProps) {
+  const { height, backgroundColor } = (settings ?? {}) as unknown as HeroSettings;
+  const minHeight = `${height ?? 80}vh`;
+
+  return (
+    <section style={{ minHeight }} className="relative ...">
+      {/* image + overlay */}
+      <div
+        className={cn(
+          backgroundColor && "rounded-lg bg-background-secondary/80 p-8 backdrop-blur-sm md:p-12",
+        )}
+      >
+        {/* preHeading, heading, text, buttons */}
+      </div>
+    </section>
+  );
+}
+```
+
+Keys: settings are always optional (editors may not fill them in); fallbacks must reproduce the pre-settings layout exactly so behavior is unchanged when settings are absent.
+
 ## Typing block props
 
 Per-block prop shapes are derived from the generated Delivery API types in `src/integrations/umbraco/types.ts`. When the Delivery API exposes per-element-type schemas (Umbraco 14+), import them directly. Otherwise hand-write a small interface per block matching the properties the editor exposes, and refine over time.
