@@ -103,11 +103,9 @@ export default function Card({ content, settings }: BlockComponentProps) {
     centerContent && "text-center",
   );
 
-  // Width applies on md+ (mobile is always full width via the Cards wrapper grid).
-  // Subtract gap (1rem) so 33% × 3 + gaps actually fit per row.
-  const innerStyle: React.CSSProperties = width
-    ? { ["--card-basis" as string]: `calc(${width} - 1rem)` }
-    : {};
+  // Width applies on md+ (mobile is always full width via the Cards wrapper).
+  // Subtract gap (1rem) so 33% × 3 + gaps fit per row.
+  const basis = width ? `calc(${width} - 1rem)` : "100%";
 
   const mediaNode = showIcon ? (
     <div
@@ -172,8 +170,8 @@ export default function Card({ content, settings }: BlockComponentProps) {
 
   return (
     <div
-      style={innerStyle}
-      className="w-full md:[flex:0_0_var(--card-basis,100%)] md:max-w-[var(--card-basis,100%)]"
+      style={{ flexBasis: basis, maxWidth: basis }}
+      className="w-full flex-shrink-0 flex-grow-0 max-md:!basis-full max-md:!max-w-full"
     >
       {isLinked ? (
         <UmbracoLink
