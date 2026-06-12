@@ -1,64 +1,100 @@
-# Plan: Handle block `*Settings` — Hero first, document the pattern
+# Plan: `cards` + `card` blocks
 
-## Goal
+Build two new blocks. `cards` is a section wrapper (`title`, `text`, nested `cardsList`). `card` is the leaf, with `cardSettings` driving presentation. Follow the `*Settings` convention documented in the `umbraco-headless-frontend` skill.
 
-Make Hero actually read its `heroSettings` (height slider, backgroundColor toggle) and establish the per-block settings pattern. Subsequent blocks will follow the same shape as they're built.
+## Files
 
-## Scope
+### 1. `src/components/umbraco/blocks/Cards.tsx` (new)
 
-- **In scope:** Hero settings wiring; settings typing convention; skill docs update.
-- **Out of scope:** Settings for other blocks (handled when each block is built).
-
-## Changes
-
-### 1. Type the settings shape (`src/components/umbraco/blocks/Hero.tsx`)
-
-Add a `HeroSettings` interface alongside `HeroContent`:
+Wrapper. Renders centered `title` (h2) + `text` (paragraph), then a `flex flex-wrap` row of `<Card>` children using each item's `settings.width` to drive `flex-basis`.
 
 ```ts
-interface HeroSettings {
-  height?: number;        // 0–100, viewport %
-  backgroundColor?: boolean;
+interface CardsContent {
+  title?: string;
+  text?: string;
+  cardsList?: { items?: BlockItem[] };
 }
 ```
 
-Destructure `settings` from `BlockComponentProps` and cast: `const { height, backgroundColor } = (settings ?? {}) as unknown as HeroSettings;`.
+Iterate `cardsList.items`, pass each item's `content.properties` and `settings.properties` down to `<Card>`. No `cardsSettings` in the current payload — leave a typed-but-empty `CardsSettings` interface for future extension.
 
-### 2. Apply `height` as viewport %
+### 2. `src/components/umbraco/blocks/Card.tsx` (new)
 
-- Replace the hardcoded `min-h-[80vh]` on the `<section>` with `style={{ minHeight: `${height ?? 80}vh` }}` (keep 80 as the fallback so behavior is unchanged when no settings are set).
-- Same minHeight applied to the inner flex container that currently uses `min-h-[80vh]`.
+Leaf component. Reads both `content` and `settings`.
 
-### 3. Apply `backgroundColor` as a tinted panel behind text
+```ts
+interface CardContent {
+  heading?: string;
+  text?: { markup?: string; blocks?: unknown[] } | string;
+  image?: UmbracoMediaLike[];
+  icon?: string | null;            // shape TBD; treat as string/null for now
+  link?: UmbracoLinkPickerItem[] | null;
+  buttonOne?: UmbracoLinkPickerItem[] | null;
+  buttonOneColor?: ButtonColor;
+  buttonTwo?: UmbracoLinkPickerItem[] | null;
+  buttonTwoColor?: ButtonColor;
+}
 
-When `backgroundColor === true`, wrap the existing inner content column (preHeading + h1 + RichText + buttons) in a panel:
-
-```tsx
-<div className={backgroundColor ? "rounded-lg bg-background-secondary/80 backdrop-blur-sm p-8 md:p-12" : ""}>
-  {/* existing pre-heading, heading, text, buttons */}
-</div>
+interface CardSettings {
+  width?: "25%" | "33%" | "50%" | "100%" | string;
+  boxed?: boolean;
+  centerContent?: boolean;
+  mediaLeft?: boolean;
+  border?: boolean;
+  preferIcon?: boolean;
+}
 ```
 
-The image, dark overlay, and scrollIcon stay outside the panel. When false, no wrapper styling is applied — current layout is preserved.
+Width handling: width applies on `md:` and up via inline `style={{ flexBasis }}`. On mobile, every card is full width. Map `"33%"` → `calc(33.3333% - gap)`; simpler: use `style={{ flexBasis: width }}` with `flex-grow-0` and a wrapping flex container with `gap-6`, and accept minor sub-pixel rounding (matches the reference).
 
-### 4. Update the skill (`.agents/skills/umbraco-headless-frontend/`)
+Layout shape:
 
-Copy the active skill into the draft directory, then:
+- **Default (image top)**: column layout. `<UmbracoImage>` on top (aspect-video, object-cover), then a content area with heading (h3), RichText, buttons row.
+- **`mediaLeft: true`**: on `md:` and up, switch to a 2-column grid `grid-cols-[40%_1fr]` with image left, content right. On mobile, stack vertically (matches screenshot 4 caption "I mobil justeras layouten till vertikal").
+- **`boxed: true`**: wrap card in `rounded-lg bg-card shadow-md` with inner padding. Default (not boxed): no panel; image flush, content padded only horizontally if needed. From screenshots, every variant looks "boxed-ish" — the un-boxed look in screenshot 2 is just `link`-wrapped without buttons. Implement faithfully: `boxed` adds bg + shadow, otherwise transparent.
+- **`border: true`**: adds `border border-border` (combines with or replaces boxed shadow per CMS intent — additive is safe).
+- **`centerContent: true`**: `text-center` + center buttons (`justify-center`).
+- **`preferIcon: true`**: when an `icon` is present, render the icon in place of `image`. If `preferIcon` is true but no icon, fall back to image. Icon rendering: render the icon string inside a circular badge (`h-16 w-16 rounded-full bg-primary/10 text-primary grid place-items-center`); treat the value as a class/glyph name placeholder for now — we'll refine when we have a real icon payload.
+- **`link` present**: entire card becomes a single `<UmbracoLink>` wrapper with hover affordance (`hover:shadow-lg transition`). Buttons inside a link would nest `<a>` tags — when `link` is set, suppress button rendering (matches "Cards med länkar" variant having no buttons).
 
-- **`references/block-registry.md`** — add a "Settings blocks" section documenting:
-  - Convention: each block alias `foo` may have a sibling element type `fooSettings` that Umbraco attaches as `item.settings`.
-  - `BlockListRenderer` already forwards `settings.properties` as the `settings` prop — no plumbing changes needed per block.
-  - Pattern: declare a `FooSettings` interface in the same file as the block, destructure with sensible fallbacks, apply to styling (not content).
-  - Show the Hero example (height → minHeight vh, backgroundColor → tinted panel) as the canonical reference.
-- **`references/phased-workflow.md`** — under Phase 3 deliverables, add: "For each block, also handle its `*Settings` sibling if present (typed + applied to presentation only)."
-- Apply the draft with `skills--apply_draft`.
+Buttons: reuse the same `variantFor(color)` mapping pattern from `Hero.tsx`. Two buttons, rendered in a `mt-6 flex flex-wrap gap-3` row (or `justify-center` when `centerContent`).
+
+### 3. `src/components/umbraco/blocks/registry.ts`
+
+Register both:
+
+```ts
+import Cards from "./Cards";
+import Card from "./Card";
+
+export const blockRegistry: Record<string, BlockComponent> = {
+  hero: Hero as BlockComponent,
+  cards: Cards as BlockComponent,
+  card: Card as BlockComponent,
+};
+```
+
+(Registering `card` lets it be reused standalone if ever placed at top level. The `cards` wrapper renders its children directly, not through the registry, since `cardsList` is a nested block list and we want tight control over the flex container.)
+
+### 4. Skill update (`.agents/skills/umbraco-headless-frontend`)
+
+Copy active skill into draft, then in `references/block-registry.md`:
+
+- Add a "Wrapper blocks with nested block lists" note using `cards`/`card` as the example: when a block has a nested `cardsList`, the wrapper component iterates `items` itself (passing `content.properties` + `settings.properties` to the child component) rather than delegating to `BlockListRenderer`, because the wrapper owns the flex/grid container.
+- Extend the settings example to show width-as-flex-basis with mobile fallback.
+
+Apply with `skills--apply_draft`.
 
 ## Out of scope
 
-- Settings for other blocks (richText, cardGrid, etc.) — applied per-block in future turns.
-- Changing the `BlockComponentProps` type signature — already correct.
-- Any Umbraco-side schema changes.
+- Real icon library wiring (waiting for a real `icon` payload to confirm shape).
+- `cardsSettings` (not in current payload).
+- Animations / hover micro-interactions beyond a shadow lift on linked cards.
 
 ## Review checkpoint
 
-After implementation: toggle `backgroundColor` and adjust `height` in Umbraco backoffice, refresh preview, confirm both apply without breaking the existing hero layout when settings are absent.
+`/sv/cards` should render all four variants:
+1. **Exempel** — 3 boxed cards, image top, 33% width each.
+2. **Cards med länkar** — 3 cards as full-card links, no buttons.
+3. **Cards med knappar** — 2 cards (50% each), buttons rendered with color variants.
+4. **Cards åt sidan** — mixed widths with `mediaLeft` on the first row (image left/text right), stacking vertically on mobile.
