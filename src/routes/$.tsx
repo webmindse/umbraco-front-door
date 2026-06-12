@@ -6,9 +6,12 @@ import { useEffect } from "react";
 import { SiteShell } from "@/components/site/SiteShell";
 import { PageRenderer } from "@/components/umbraco/PageRenderer";
 import { getContentByRoute } from "@/lib/umbraco.functions";
+import type { ContentItem } from "@/integrations/umbraco/types";
 import { reportLovableError } from "@/lib/lovable-error-reporting";
 
-function pageQueryOptions(path: string, fetcher: typeof getContentByRoute) {
+type PageFetcher = (args: { data: { path: string } }) => Promise<ContentItem | null>;
+
+function pageQueryOptions(path: string, fetcher: PageFetcher) {
   return queryOptions({
     queryKey: ["umbraco-page", path],
     queryFn: async () => {
@@ -21,7 +24,7 @@ function pageQueryOptions(path: string, fetcher: typeof getContentByRoute) {
 
 export const Route = createFileRoute("/$")({
   head: ({ loaderData }) => {
-    const name = loaderData?.name ?? "Bricks";
+    const name = (loaderData as ContentItem | undefined)?.name ?? "Bricks";
     return {
       meta: [
         { title: name },
@@ -30,10 +33,12 @@ export const Route = createFileRoute("/$")({
     };
   },
   loader: async ({ context, params }) => {
-    const path = `/${params._splat ?? ""}`;
-    const data = await getContentByRoute({ data: { path } });
+    const path = `/${(params as { _splat?: string })._splat ?? ""}`;
+    const data = await (getContentByRoute as unknown as PageFetcher)({ data: { path } });
     if (!data) throw notFound();
-    await context.queryClient.prefetchQuery(pageQueryOptions(path, getContentByRoute));
+    await context.queryClient.prefetchQuery(
+      pageQueryOptions(path, getContentByRoute as unknown as PageFetcher),
+    );
     return data;
   },
   component: CatchAllPage,
@@ -42,9 +47,9 @@ export const Route = createFileRoute("/$")({
 });
 
 function CatchAllPage() {
-  const params = Route.useParams();
+  const params = Route.useParams() as { _splat?: string };
   const path = `/${params._splat ?? ""}`;
-  const fetcher = useServerFn(getContentByRoute);
+  const fetcher = useServerFn(getContentByRoute) as unknown as PageFetcher;
   const { data } = useSuspenseQuery(pageQueryOptions(path, fetcher));
 
   return (
@@ -55,7 +60,7 @@ function CatchAllPage() {
 }
 
 function PageNotFound() {
-  const params = Route.useParams();
+  const params = Route.useParams() as { _splat?: string };
   return (
     <SiteShell>
       <div className="mx-auto max-w-3xl px-4 py-24 text-center">
