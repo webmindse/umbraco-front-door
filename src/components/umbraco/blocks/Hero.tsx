@@ -27,6 +27,14 @@ interface HeroContent {
   scrollIcon?: boolean;
 }
 
+interface HeroSettings {
+  /** Viewport-percent height (0–100). Defaults to 80. */
+  height?: number;
+  /** When true, render a tinted panel behind the text for contrast. */
+  backgroundColor?: boolean;
+}
+
+
 const ANIMATED_TOKEN = "#animatedWords";
 
 function useAnimatedWord(words: string[] | undefined): string | null {
