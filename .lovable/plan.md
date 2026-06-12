@@ -1,26 +1,64 @@
-# Plan: Add media-URL gotcha to umbraco-headless-frontend skill
+# Plan: Handle block `*Settings` — Hero first, document the pattern
 
-Capture the `VITE_UMBRACO_PUBLIC_BASE_URL` requirement so future runs of this skill don't repeat the broken-image debugging cycle.
+## Goal
 
-## Steps
+Make Hero actually read its `heroSettings` (height slider, backgroundColor toggle) and establish the per-block settings pattern. Subsequent blocks will follow the same shape as they're built.
 
-1. **Copy the active skill into a draft** at `.agents/skills/umbraco-headless-frontend/` (SKILL.md + all references). Drafts are the only safe place to edit.
+## Scope
 
-2. **Edit `references/phase-0-checklist.md`** — add a bullet under env-var setup:
-   > Set BOTH `UMBRACO_BASE_URL` (server, secret) AND `VITE_UMBRACO_PUBLIC_BASE_URL` (client, public) to the same origin. The `VITE_*` var is required so the browser can resolve relative `/media/...` URLs Umbraco returns in JSON.
+- **In scope:** Hero settings wiring; settings typing convention; skill docs update.
+- **Out of scope:** Settings for other blocks (handled when each block is built).
 
-3. **Edit `references/server-fn-proxy.md`** — add a short "Media URLs" subsection at the end:
-   - Delivery API returns relative `/media/...` paths in image properties.
-   - The server-fn never sees these as `<img>` requests — the browser does.
-   - Therefore the public origin needs a separate `VITE_*` env var; do NOT try to reuse the server secret.
-   - Symptom if missing: hero/card images 404 from the preview origin instead of the CMS host.
-   - Note: `UmbracoImage` already reads `import.meta.env.VITE_UMBRACO_PUBLIC_BASE_URL` — no component changes needed once the env var is set.
+## Changes
 
-4. **No SKILL.md changes** — the front-matter description still matches; this is just deeper reference content.
+### 1. Type the settings shape (`src/components/umbraco/blocks/Hero.tsx`)
 
-5. **Apply the draft** via `skills--apply_draft` with path `.agents/skills/umbraco-headless-frontend`.
+Add a `HeroSettings` interface alongside `HeroContent`:
+
+```ts
+interface HeroSettings {
+  height?: number;        // 0–100, viewport %
+  backgroundColor?: boolean;
+}
+```
+
+Destructure `settings` from `BlockComponentProps` and cast: `const { height, backgroundColor } = (settings ?? {}) as unknown as HeroSettings;`.
+
+### 2. Apply `height` as viewport %
+
+- Replace the hardcoded `min-h-[80vh]` on the `<section>` with `style={{ minHeight: `${height ?? 80}vh` }}` (keep 80 as the fallback so behavior is unchanged when no settings are set).
+- Same minHeight applied to the inner flex container that currently uses `min-h-[80vh]`.
+
+### 3. Apply `backgroundColor` as a tinted panel behind text
+
+When `backgroundColor === true`, wrap the existing inner content column (preHeading + h1 + RichText + buttons) in a panel:
+
+```tsx
+<div className={backgroundColor ? "rounded-lg bg-background-secondary/80 backdrop-blur-sm p-8 md:p-12" : ""}>
+  {/* existing pre-heading, heading, text, buttons */}
+</div>
+```
+
+The image, dark overlay, and scrollIcon stay outside the panel. When false, no wrapper styling is applied — current layout is preserved.
+
+### 4. Update the skill (`.agents/skills/umbraco-headless-frontend/`)
+
+Copy the active skill into the draft directory, then:
+
+- **`references/block-registry.md`** — add a "Settings blocks" section documenting:
+  - Convention: each block alias `foo` may have a sibling element type `fooSettings` that Umbraco attaches as `item.settings`.
+  - `BlockListRenderer` already forwards `settings.properties` as the `settings` prop — no plumbing changes needed per block.
+  - Pattern: declare a `FooSettings` interface in the same file as the block, destructure with sensible fallbacks, apply to styling (not content).
+  - Show the Hero example (height → minHeight vh, backgroundColor → tinted panel) as the canonical reference.
+- **`references/phased-workflow.md`** — under Phase 3 deliverables, add: "For each block, also handle its `*Settings` sibling if present (typed + applied to presentation only)."
+- Apply the draft with `skills--apply_draft`.
 
 ## Out of scope
 
-- No changes to the project itself (the `.env` fix already shipped).
-- No rewrite of the phased workflow — only additive edits to two reference files.
+- Settings for other blocks (richText, cardGrid, etc.) — applied per-block in future turns.
+- Changing the `BlockComponentProps` type signature — already correct.
+- Any Umbraco-side schema changes.
+
+## Review checkpoint
+
+After implementation: toggle `backgroundColor` and adjust `height` in Umbraco backoffice, refresh preview, confirm both apply without breaking the existing hero layout when settings are absent.
