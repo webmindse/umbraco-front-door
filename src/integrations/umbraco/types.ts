@@ -5,6 +5,14 @@
 // actually consume. If swagger is later enabled, replace this file with the
 // output of `scripts/generate-types.sh` (skill-bundled).
 
+export type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonValue[]
+  | { [key: string]: JsonValue };
+
 export interface UmbracoRoute {
   path: string;
   queryString: string | null;
