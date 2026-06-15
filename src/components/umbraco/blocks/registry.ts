@@ -5,6 +5,7 @@ import type { BlockItem, JsonObject } from "@/integrations/umbraco/types";
 import Card from "./Card";
 import Cards from "./Cards";
 import Hero from "./Hero";
+import TextAndMedia from "./TextAndMedia";
 
 export interface BlockComponentProps<
   TContent extends JsonObject = JsonObject,
