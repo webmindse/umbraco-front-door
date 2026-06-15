@@ -1,5 +1,5 @@
 import { RichTextRenderer } from "@/components/umbraco/RichTextRenderer";
-import { UmbracoImage, type UmbracoMediaLike } from "@/components/umbraco/UmbracoImage";
+import { resolveUmbracoMediaUrl, UmbracoImage, type UmbracoMediaLike } from "@/components/umbraco/UmbracoImage";
 import { UmbracoLink, type UmbracoLinkPickerItem } from "@/components/umbraco/UmbracoLink";
 import { Button } from "@/components/ui/button";
 import type { JsonObject } from "@/integrations/umbraco/types";
