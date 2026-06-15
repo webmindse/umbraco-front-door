@@ -50,6 +50,37 @@ export const getChildren = createServerFn({ method: "GET" })
     }),
   );
 
+const cultureInput = z.object({ culture: z.string().optional() });
+
+/**
+ * Fetch the site/home node for a given culture. The `site` document is the
+ * start item and carries global header/footer config + a `cultures` map for
+ * the language picker.
+ */
+export const getSite = createServerFn({ method: "GET" })
+  .inputValidator((data: unknown) => cultureInput.parse(data ?? {}))
+  .handler(({ data }) =>
+    umbracoFetch<ContentItem>("/content/item/", { culture: data.culture }),
+  );
+
+/**
+ * Fetch all descendants of the site as a flat list, filtered to `page` docs.
+ * Header nav and mobile drill-down are built from this single response.
+ */
+export const getNavigationDescendants = createServerFn({ method: "GET" })
+  .inputValidator((data: unknown) =>
+    z.object({ rootId: z.string().uuid(), culture: z.string().optional() }).parse(data),
+  )
+  .handler(({ data }) => {
+    const params = new URLSearchParams();
+    params.set("fetch", `descendants:${data.rootId}`);
+    params.set("filter", "contentType:page");
+    params.set("take", "200");
+    return umbracoFetch<ContentResponse>(`/content?${params.toString()}`, {
+      culture: data.culture,
+    });
+  });
+
 const byTypeInput = z.object({
   contentType: z.string().min(1),
   take: z.number().int().min(1).max(100).optional(),
