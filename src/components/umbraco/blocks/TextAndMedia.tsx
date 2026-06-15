@@ -143,7 +143,7 @@ export default function TextAndMedia({ content, settings }: BlockComponentProps)
     if (vid?.url) {
       mediaNode = (
         <video
-          src={vid.url}
+          src={resolveUmbracoMediaUrl(vid.url)}
           className={videoClass}
           controls={s.showControls ?? true}
           autoPlay={s.autoPlay ?? false}
