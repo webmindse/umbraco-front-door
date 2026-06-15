@@ -1,52 +1,96 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound, useRouter } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 import { SiteShell } from "@/components/site/SiteShell";
+import { PageRenderer } from "@/components/umbraco/PageRenderer";
+import { getContentByRoute } from "@/lib/umbraco.functions";
+import type { ContentItem } from "@/integrations/umbraco/types";
+import { reportLovableError } from "@/lib/lovable-error-reporting";
+
+type PageFetcher = (args: { data: { path: string } }) => Promise<ContentItem | null>;
+
+const HOME_PATH = "/";
+
+function homeQueryOptions(fetcher: PageFetcher) {
+  return queryOptions({
+    queryKey: ["umbraco-page", HOME_PATH],
+    queryFn: async () => {
+      const data = await fetcher({ data: { path: HOME_PATH } });
+      if (!data) throw notFound();
+      return data;
+    },
+  });
+}
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Bricks" },
-      { name: "description", content: "Headless Umbraco frontend — Phase 2 design shell." },
-    ],
-  }),
-  component: Index,
+  head: ({ loaderData }) => {
+    const name = (loaderData as ContentItem | undefined)?.name ?? "Bricks";
+    return {
+      meta: [
+        { title: name },
+        { name: "description", content: `${name} — Bricks` },
+      ],
+    };
+  },
+  loader: async ({ context }) => {
+    const data = await (getContentByRoute as unknown as PageFetcher)({
+      data: { path: HOME_PATH },
+    });
+    if (!data) throw notFound();
+    await context.queryClient.prefetchQuery(
+      homeQueryOptions(getContentByRoute as unknown as PageFetcher),
+    );
+    return data;
+  },
+  component: HomePage,
+  notFoundComponent: HomeNotFound,
+  errorComponent: HomeError,
 });
 
-function Index() {
+function HomePage() {
+  const fetcher = useServerFn(getContentByRoute) as unknown as PageFetcher;
+  const { data } = useSuspenseQuery(homeQueryOptions(fetcher));
+
   return (
     <SiteShell>
-      <section className="mx-auto max-w-5xl px-4 py-24 sm:px-6 lg:px-8">
-        <p className="text-sm font-medium uppercase tracking-widest text-primary">
-          Phase 2 — Design system
-        </p>
-        <h1 className="mt-4 text-5xl font-semibold tracking-tight text-text-dark">
-          Bricks frontend shell
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg text-text-grey">
-          Fira Sans is loaded, color tokens are wired, and the header/footer shell
-          is in place. Phase 3 will render real Umbraco blocks inside this layout.
-        </p>
+      <PageRenderer page={data} />
+    </SiteShell>
+  );
+}
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            { name: "Primary", className: "bg-primary text-primary-foreground" },
-            { name: "Secondary", className: "bg-secondary text-secondary-foreground" },
-            { name: "Accent", className: "bg-accent text-accent-foreground" },
-            { name: "Onyx", className: "bg-brand-onyx text-text-light" },
-            { name: "Muted teal", className: "bg-brand-muted-teal text-brand-onyx" },
-            { name: "Lilac", className: "bg-brand-lilac text-brand-onyx" },
-            { name: "Lavender blush", className: "bg-brand-lavender-blush text-brand-mauve-shadow" },
-            { name: "Mauve shadow", className: "bg-brand-mauve-shadow text-brand-lavender-blush" },
-          ].map((swatch) => (
-            <div
-              key={swatch.name}
-              className={`flex h-24 items-end rounded-lg p-4 text-sm font-medium ${swatch.className}`}
-            >
-              {swatch.name}
-            </div>
-          ))}
-        </div>
-      </section>
+function HomeNotFound() {
+  return (
+    <SiteShell>
+      <div className="mx-auto max-w-3xl px-4 py-24 text-center">
+        <h1 className="text-5xl font-semibold">404</h1>
+        <p className="mt-4 text-muted-foreground">No home content found.</p>
+      </div>
+    </SiteShell>
+  );
+}
+
+function HomeError({ error, reset }: { error: Error; reset: () => void }) {
+  const router = useRouter();
+  useEffect(() => {
+    reportLovableError(error, { boundary: "umbraco_home" });
+  }, [error]);
+  return (
+    <SiteShell>
+      <div className="mx-auto max-w-3xl px-4 py-24 text-center">
+        <h1 className="text-2xl font-semibold">This page didn't load</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
+        <button
+          onClick={() => {
+            router.invalidate();
+            reset();
+          }}
+          className="mt-6 rounded bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+        >
+          Try again
+        </button>
+      </div>
     </SiteShell>
   );
 }
