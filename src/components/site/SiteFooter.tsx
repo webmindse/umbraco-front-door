@@ -2,13 +2,13 @@ import { MapPin, Phone, Mail } from "lucide-react";
 
 import { UmbracoImage, type UmbracoMediaLike } from "@/components/umbraco/UmbracoImage";
 import { UmbracoLink, type UmbracoLinkPickerItem } from "@/components/umbraco/UmbracoLink";
-import type { ContentItem, BlockItem } from "@/integrations/umbraco/types";
+import type { ContentItem } from "@/integrations/umbraco/types";
 
 interface SiteFooterProps {
   site: ContentItem;
 }
 
-interface FooterNavItem extends BlockItem {
+interface FooterNavItem {
   content: {
     contentType: string;
     id: string;
@@ -17,6 +17,7 @@ interface FooterNavItem extends BlockItem {
       link: UmbracoLinkPickerItem[];
     };
   };
+  settings: unknown;
 }
 
 function getMedia(prop: unknown): UmbracoMediaLike | null {
