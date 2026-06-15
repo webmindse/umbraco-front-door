@@ -30,4 +30,5 @@ export const blockRegistry: Record<string, BlockComponent> = {
   hero: Hero as BlockComponent,
   cards: Cards as BlockComponent,
   card: Card as BlockComponent,
+  textAndMedia: TextAndMedia as BlockComponent,
 };
