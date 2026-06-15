@@ -26,12 +26,14 @@ interface UmbracoImageProps {
 
 const CMS_BASE = (import.meta.env.VITE_UMBRACO_PUBLIC_BASE_URL ?? "").replace(/\/+$/, "");
 
-function resolveUrl(url: string): string {
-  if (!url) return url;
+export function resolveUmbracoMediaUrl(url: string | null | undefined): string {
+  if (!url) return "";
   if (/^https?:\/\//i.test(url)) return url;
-  if (!CMS_BASE) return url; // relative — server will proxy in SSR; browser may 404
+  if (!CMS_BASE) return url;
   return `${CMS_BASE}${url.startsWith("/") ? url : `/${url}`}`;
 }
+
+const resolveUrl = resolveUmbracoMediaUrl;
 
 export function UmbracoImage({
   media,
