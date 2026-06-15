@@ -54,7 +54,7 @@ function HomePage() {
   const { data } = useSuspenseQuery(homeQueryOptions(fetcher));
 
   return (
-    <SiteShell>
+    <SiteShell currentPage={data}>
       <PageRenderer page={data} />
     </SiteShell>
   );

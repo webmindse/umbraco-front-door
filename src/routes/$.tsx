@@ -53,7 +53,7 @@ function CatchAllPage() {
   const { data } = useSuspenseQuery(pageQueryOptions(path, fetcher));
 
   return (
-    <SiteShell>
+    <SiteShell currentPage={data}>
       <PageRenderer page={data} />
     </SiteShell>
   );
