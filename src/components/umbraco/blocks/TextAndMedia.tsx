@@ -253,20 +253,26 @@ export default function TextAndMedia({ content, settings }: BlockComponentProps)
   ) : null;
 
   const textNode = (
-    <div
-      className={cn(
-        "flex flex-col",
-        textAlignClass,
-        s.applyBackgroundColor && "bg-muted rounded-lg p-6 md:p-8",
-      )}
-    >
+    <div className={cn("flex flex-col", textAlignClass)}>
       {preHeading ? (
-        <p className="mb-2 text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">
+        <p
+          className={cn(
+            "mb-2 text-sm font-medium uppercase tracking-[0.2em]",
+            s.applyBackgroundColor ? "text-text-light/70" : "text-muted-foreground",
+          )}
+        >
           {preHeading}
         </p>
       ) : null}
       {heading ? (
-        <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">{heading}</h2>
+        <h2
+          className={cn(
+            "text-3xl font-semibold tracking-tight md:text-4xl",
+            s.applyBackgroundColor && "text-text-light",
+          )}
+        >
+          {heading}
+        </h2>
       ) : null}
       {text ? <RichTextRenderer value={text} className="mt-4" /> : null}
       {(buttonOne?.[0] || buttonTwo?.[0]) && (
@@ -278,11 +284,13 @@ export default function TextAndMedia({ content, settings }: BlockComponentProps)
     </div>
   );
 
-  const wrapperClass = cn(
-    "mx-auto max-w-6xl px-6",
+  const sectionClass = cn(
     s.applyMarginAbove && "mt-12 md:mt-16",
     s.applyMarginBelow && "mb-12 md:mb-16",
+    s.applyBackgroundColor && "bg-background-secondary text-text-light py-16 md:py-24",
   );
+
+  const containerClass = cn("mx-auto max-w-6xl px-6");
 
   const innerClass = cn(
     s.applyBorder && "border border-border",
@@ -290,17 +298,18 @@ export default function TextAndMedia({ content, settings }: BlockComponentProps)
     (s.applyBorder || s.applyRoundedCorners) && "p-6 md:p-8 overflow-hidden",
   );
 
-  // Behind: media as background, text overlaid
+  // Behind: media as background, text overlaid in a cream card
   if (alignment === "Behind" && mediaNode) {
     return (
-      <section id={s.anchorId ?? undefined} className={wrapperClass}>
-        <div className={cn("relative overflow-hidden", innerClass, s.applyRoundedCorners && "rounded-lg")}>
-          <div className="absolute inset-0">
-            {mediaNode}
-            <div className="absolute inset-0 bg-black/40" aria-hidden />
-          </div>
-          <div className="relative z-10 p-8 md:p-16 text-text-light">
-            {textNode}
+      <section id={s.anchorId ?? undefined} className={sectionClass}>
+        <div className={containerClass}>
+          <div className={cn("relative overflow-hidden rounded-lg", innerClass)}>
+            <div className="absolute inset-0">{mediaNode}</div>
+            <div className="relative z-10 flex items-center justify-center p-8 md:p-16">
+              <div className="w-full max-w-2xl rounded-lg bg-accent p-8 text-accent-foreground md:p-12">
+                {textNode}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -310,30 +319,34 @@ export default function TextAndMedia({ content, settings }: BlockComponentProps)
   // Above / Below: stacked
   if (alignment === "Above" || alignment === "Below" || !mediaNode) {
     return (
-      <section id={s.anchorId ?? undefined} className={wrapperClass}>
-        <div className={cn("flex flex-col gap-8", innerClass)}>
-          {alignment === "Above" && mediaWithCaption}
-          {textNode}
-          {alignment === "Below" && mediaWithCaption}
+      <section id={s.anchorId ?? undefined} className={sectionClass}>
+        <div className={containerClass}>
+          <div className={cn("flex flex-col gap-8", innerClass)}>
+            {alignment === "Above" && mediaWithCaption}
+            {textNode}
+            {alignment === "Below" && mediaWithCaption}
+          </div>
         </div>
       </section>
     );
   }
 
-  // Left / Right on md+, stacked on mobile (media first on mobile)
+  // Left / Right on md+, stacked on mobile
   const mediaFirst = alignment === "Left";
   return (
-    <section id={s.anchorId ?? undefined} className={wrapperClass}>
-      <div
-        className={cn(
-          "grid grid-cols-1 gap-8 md:grid-cols-2 md:items-center",
-          innerClass,
-        )}
-      >
-        <div className={cn(mediaFirst ? "md:order-1" : "md:order-2")}>
-          {mediaWithCaption}
+    <section id={s.anchorId ?? undefined} className={sectionClass}>
+      <div className={containerClass}>
+        <div
+          className={cn(
+            "grid grid-cols-1 gap-8 md:grid-cols-2 md:items-center",
+            innerClass,
+          )}
+        >
+          <div className={cn(mediaFirst ? "md:order-1" : "md:order-2")}>
+            {mediaWithCaption}
+          </div>
+          <div className={cn(mediaFirst ? "md:order-2" : "md:order-1")}>{textNode}</div>
         </div>
-        <div className={cn(mediaFirst ? "md:order-2" : "md:order-1")}>{textNode}</div>
       </div>
     </section>
   );
