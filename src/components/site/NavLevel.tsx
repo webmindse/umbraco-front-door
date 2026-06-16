@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import type { ContentItem } from "@/integrations/umbraco/types";
 
