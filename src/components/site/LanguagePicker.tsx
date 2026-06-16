@@ -4,9 +4,15 @@ import { UmbracoImage, type UmbracoMediaLike } from "@/components/umbraco/Umbrac
 import { otherCulture, type Culture } from "@/lib/culture";
 
 export interface LanguagePickerProps {
-  /** Current culture (drives label/flag from the loaded site doc). */
+  /** Current culture. */
   culture: Culture;
-  /** Flag image of the OTHER culture (what we'd switch to). */
+  /** Flag of the CURRENT culture (shown by default). */
+  currentFlag?: UmbracoMediaLike | null;
+  /** Alt text for the current flag. */
+  currentFlagAlt?: string;
+  /** Display name of the current culture. */
+  currentLanguageName?: string;
+  /** Flag image of the OTHER culture (slides in on hover). */
   otherFlag?: UmbracoMediaLike | null;
   /** Alt text for the OTHER flag. */
   otherFlagAlt?: string;
@@ -22,6 +28,8 @@ export interface LanguagePickerProps {
 
 export function LanguagePicker({
   culture,
+  currentFlag,
+  currentFlagAlt,
   otherFlag,
   otherFlagAlt,
   otherLanguageName,
@@ -65,19 +73,33 @@ export function LanguagePicker({
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center gap-2 rounded px-2 py-1"
+      className="group relative inline-flex h-6 w-9 items-center justify-center overflow-hidden rounded-sm"
       aria-label={otherFlagAlt ?? `Switch to ${otherLanguageName ?? target}`}
       title={otherLanguageName ?? target.toUpperCase()}
     >
+      {currentFlag ? (
+        <UmbracoImage
+          media={currentFlag}
+          alt={currentFlagAlt}
+          height={24}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 ease-out group-hover:-translate-x-full"
+        />
+      ) : (
+        <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold transition-transform duration-300 ease-out group-hover:-translate-x-full">
+          {culture.toUpperCase()}
+        </span>
+      )}
       {otherFlag ? (
         <UmbracoImage
           media={otherFlag}
           alt={otherFlagAlt}
-          height={20}
-          className="h-5 w-auto"
+          height={24}
+          className="absolute inset-0 h-full w-full translate-x-full object-cover transition-transform duration-300 ease-out group-hover:translate-x-0"
         />
       ) : (
-        <span className="text-xs font-semibold">{target.toUpperCase()}</span>
+        <span className="absolute inset-0 flex translate-x-full items-center justify-center text-xs font-semibold transition-transform duration-300 ease-out group-hover:translate-x-0">
+          {target.toUpperCase()}
+        </span>
       )}
     </button>
   );

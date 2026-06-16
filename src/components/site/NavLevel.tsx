@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import type { ContentItem } from "@/integrations/umbraco/types";
 
@@ -81,9 +82,9 @@ export function NavLevel({
         <button
           type="button"
           onClick={onBack}
-          className="flex w-full items-center gap-2 border-b border-border px-4 py-4 text-left text-base font-medium"
+          className="flex w-full items-center gap-2 border-b border-border px-4 py-5 text-left text-base font-medium"
         >
-          <span aria-hidden="true">&lt;</span>
+          <ChevronLeft className="h-5 w-5" aria-hidden="true" />
           <span>{title ?? backLabel}</span>
         </button>
       ) : null}
@@ -96,7 +97,7 @@ export function NavLevel({
             <Link
               to={node.path}
               onClick={onSelect}
-              className="flex-1 px-4 py-4 text-base"
+              className="flex-1 px-4 py-5 text-base"
             >
               {node.name}
             </Link>
@@ -105,9 +106,9 @@ export function NavLevel({
                 type="button"
                 aria-label={`Open ${node.name} submenu`}
                 onClick={() => onDrill(node)}
-                className="px-4 text-xl"
+                className="flex min-w-16 items-center justify-center border-l border-border px-5"
               >
-                &gt;
+                <ChevronRight className="h-6 w-6" aria-hidden="true" />
               </button>
             ) : null}
           </li>
