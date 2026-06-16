@@ -76,29 +76,21 @@ export function SiteHeader({
           )}
         </Link>
 
-        <nav aria-label="Primary" className="hidden gap-8 text-sm font-medium uppercase tracking-wider md:flex">
-          {nav.map((node) => {
-            const isActive = pathname === node.path || pathname.startsWith(node.path);
-            return (
-              <Link
-                key={node.id}
-                to={node.path}
-                className={
-                  isActive
-                    ? "text-text-light"
-                    : "text-text-light/80 hover:text-text-light"
-                }
-              >
-                {node.name}
-              </Link>
-            );
-          })}
+        <nav aria-label="Primary" className="hidden md:flex">
+          <ul className="flex items-center gap-8 text-sm font-medium uppercase tracking-wider">
+            {nav.map((node) => (
+              <DesktopNavItem key={node.id} node={node} />
+            ))}
+          </ul>
         </nav>
 
         <div className="flex items-center gap-2">
           <div className="hidden md:block">
             <LanguagePicker
               culture={culture}
+              currentFlag={currentFlag}
+              currentFlagAlt={currentFlagAlt}
+              currentLanguageName={currentLanguageName}
               otherFlag={otherFlag}
               otherFlagAlt={otherFlagAlt}
               otherLanguageName={otherLanguageName}
