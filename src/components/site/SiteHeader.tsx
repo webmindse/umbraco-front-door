@@ -46,6 +46,12 @@ export function SiteHeader({
   const logoName = (logo?.properties as Record<string, string> | undefined) ?? {};
   const logoAlt = culture === "sv" ? logoName.swedishAlt : logoName.englishAlt;
 
+  const currentFlag = getMedia(props.languageFlag);
+  const currentFlagAlt =
+    (props.altTextForLanguageFlag as string | undefined) ??
+    (currentFlag?.properties as Record<string, string> | undefined)?.englishAlt;
+  const currentLanguageName = props.languageDisplayName as string | undefined;
+
   const otherProps = otherSite?.properties ?? {};
   const otherFlag = getMedia(otherProps.languageFlag);
   const otherFlagAlt =
@@ -53,7 +59,6 @@ export function SiteHeader({
     (otherFlag?.properties as Record<string, string> | undefined)?.englishAlt;
   const otherLanguageName = otherProps.languageDisplayName as string | undefined;
 
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <header className="sticky top-0 z-40 w-full bg-nav-background text-text-light">
