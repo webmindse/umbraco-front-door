@@ -69,6 +69,10 @@
   --navigation-hover-background: rgba(0, 0, 0, 0.05);
   --border-color: rgba(0, 0, 0, 0.08);
 
+  /* Nav hover underline gradient */
+  --gradient-left: var(--brand-lavender-blush);
+  --gradient-right: var(--brand-lilac);
+
   --sidebar: var(--brand-white);
   --sidebar-foreground: var(--brand-gray20);
   --sidebar-primary: var(--brand-custom-green);
