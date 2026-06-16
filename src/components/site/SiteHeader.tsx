@@ -1,9 +1,10 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 import { UmbracoImage, type UmbracoMediaLike } from "@/components/umbraco/UmbracoImage";
 import type { ContentItem } from "@/integrations/umbraco/types";
 import type { Culture } from "@/lib/culture";
 
+import { DesktopNavItem } from "./DesktopNavItem";
 import { LanguagePicker } from "./LanguagePicker";
 import { MobileNavSheet } from "./MobileNavSheet";
 import { type NavNode } from "./NavLevel";
