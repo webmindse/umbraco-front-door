@@ -1,6 +1,6 @@
 import type { BlockItem, JsonObject } from "@/integrations/umbraco/types";
 
-import { blockRegistry } from "./blocks/registry";
+import { blockRegistry, silentBlockAliases } from "./blocks/registry";
 import MissingBlock from "./blocks/MissingBlock";
 
 interface BlockListRendererProps {
@@ -15,6 +15,7 @@ export function BlockListRenderer({ items }: BlockListRendererProps) {
         const alias = item.content?.contentType;
         const Component = alias ? blockRegistry[alias] : undefined;
         if (!Component) {
+          if (alias && silentBlockAliases.has(alias)) return null;
           return (
             <MissingBlock
               key={item.content?.id ?? alias}

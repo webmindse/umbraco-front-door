@@ -5,6 +5,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { inferCultureFromPath, otherCulture, type Culture } from "@/lib/culture";
 import type { ContentItem } from "@/integrations/umbraco/types";
 
+import { Breadcrumbs } from "./Breadcrumbs";
 import { SiteFooter } from "./SiteFooter";
 import { SiteHeader } from "./SiteHeader";
 import { buildNavTree } from "./NavLevel";
@@ -39,7 +40,12 @@ export function SiteShell({ children, currentPage }: SiteShellProps) {
 
   const fallbackRoutes = getCultureFallbackRoutes(site);
   const rootPath = site.route?.path ?? fallbackRoutes[culture];
-  const nav = buildNavTree(navResp.items ?? [], rootPath);
+  const navItems = navResp.items ?? [];
+  const nav = buildNavTree(navItems, rootPath);
+
+  const hideBreadcrumbs =
+    (currentPage?.properties?.hideBreadcrumbs as boolean | undefined) === true;
+  const showBreadcrumbs = Boolean(currentPage) && !hideBreadcrumbs;
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
@@ -51,6 +57,9 @@ export function SiteShell({ children, currentPage }: SiteShellProps) {
         currentPage={currentPage ?? null}
         fallbackRoutes={fallbackRoutes}
       />
+      {showBreadcrumbs && currentPage ? (
+        <Breadcrumbs site={site} navItems={navItems} currentPage={currentPage} />
+      ) : null}
       <main className="flex-1">{children}</main>
       <SiteFooter site={site} />
     </div>

@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 
 import type { BlockItem, JsonObject } from "@/integrations/umbraco/types";
 
+import Accordion from "./Accordion";
 import Card from "./Card";
 import Cards from "./Cards";
 import Hero from "./Hero";
@@ -31,4 +32,14 @@ export const blockRegistry: Record<string, BlockComponent> = {
   cards: Cards as BlockComponent,
   card: Card as BlockComponent,
   textAndMedia: TextAndMedia as BlockComponent,
+  accordion: Accordion as BlockComponent,
 };
+
+/**
+ * Aliases that are intentionally handled elsewhere (e.g. footer navigation
+ * items consumed directly by `SiteFooter`). They appear inside Block Lists
+ * but should NOT trigger the "Missing block" warning.
+ */
+export const silentBlockAliases: ReadonlySet<string> = new Set([
+  "footerNavigationItem",
+]);
