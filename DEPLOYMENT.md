@@ -86,13 +86,26 @@ Notes:
    (Production, Deploy previews, Branch deploys).
 
 3. **Build settings.** Build command: `bun run build` (or `npm run build`).
-   Publish directory: leave blank — the Netlify preset configures the output
-   location automatically. A `netlify.toml` is not required, but you can add
-   one if you want to pin the build command and Node version:
+   Publish directory: **`dist`** — the nitro `netlify` preset writes the
+   static client bundle (HTML, JS, CSS, images, `_redirects`) to `dist/` and
+   the SSR handler to `.netlify/functions-internal/`. Netlify must publish
+   `dist/` so requests for `/assets/*` resolve; otherwise CSS and JS chunks
+   return 404 and the page renders without styles.
+
+   In the Netlify dashboard (Site → Site configuration → Build & deploy →
+   Build settings), make sure the **Publish directory** field is either set
+   to `dist` or **left empty** so the value from `netlify.toml` below wins.
+   If the UI has a different value (e.g. the Vite default `dist/client`), it
+   overrides `netlify.toml` and the deploy fails with
+   `Deploy directory 'dist/client' does not exist`.
+
+   A `netlify.toml` is strongly recommended so the publish dir is pinned
+   alongside the code:
 
    ```toml
    [build]
      command = "bun run build"
+     publish = "dist"
 
    [build.environment]
      NODE_VERSION = "20"
