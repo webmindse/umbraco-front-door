@@ -144,11 +144,12 @@ export default function Hero({ content, settings }: BlockComponentProps) {
       ) : null}
 
       <div
-        className="relative z-10 mx-auto flex max-w-6xl flex-col justify-center px-6 py-24"
+        className="relative z-10 mx-auto flex max-w-6xl flex-col items-center justify-center px-6 py-24 text-center"
         style={{ minHeight }}
       >
         <div
           className={cn(
+            "flex w-full flex-col items-center",
             backgroundColor &&
               "rounded-lg bg-background-secondary/80 p-8 backdrop-blur-sm md:p-12",
           )}
@@ -160,7 +161,7 @@ export default function Hero({ content, settings }: BlockComponentProps) {
           ) : null}
 
           {heading ? (
-            <h1 className="text-4xl font-semibold leading-tight tracking-tight md:text-6xl">
+            <h1 className="text-4xl font-semibold leading-tight tracking-tight text-text-light md:text-6xl">
               {hasToken ? (
                 <>
                   {headingParts[0]}
@@ -186,7 +187,7 @@ export default function Hero({ content, settings }: BlockComponentProps) {
           ) : null}
 
           {(buttonOne?.[0] || buttonTwo?.[0] || buttonThree?.[0]) && (
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
               <HeroButton link={buttonOne?.[0]} color={buttonOneColor} />
               <HeroButton link={buttonTwo?.[0]} color={buttonTwoColor} />
               <HeroButton link={buttonThree?.[0]} color={buttonThreeColor} />
