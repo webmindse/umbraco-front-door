@@ -1,43 +1,33 @@
 ## Goal
-Make the app deployable to Netlify while keeping local/Lovable development working.
+Get the Quote block's squircle variant to match the design screenshot, using a proper visual-direction loop instead of guessing from a single screenshot.
 
-## Why this is safe for ongoing work
-The nitro `preset` only affects the production build output. The Lovable preview and `bun dev` use Vite's dev server, which is preset-agnostic — switching from `cloudflare` (default) to `netlify` does not change anything you see while editing.
+## Step 1 — Generate squircle design directions
+Re-attach your earlier Quote design screenshot (the squircle reference) so I can call `design--create_directions` with it. I'll request 3 refined variants of just the squircle quote card, all locked to:
 
-## Changes
+- Brand mauve-shadow background, light text
+- Quote mark, quote text, author avatar, author name + title
+- Centered content (both axes)
+- Compact size (not the oversized blob we have now)
+- Smoother, more subtle squircle radii than the current implementation
 
-### 1. `vite.config.ts` — switch nitro preset to Netlify
-Add a `nitro: { preset: "netlify" }` option to the existing `defineConfig({...})` call, per the recipe in `DEPLOYMENT.md`. This makes `bun run build` emit Netlify Functions output instead of a Cloudflare Worker bundle.
+The three variants will differ in proportion, internal spacing, quote-mark treatment, and avatar placement — not in palette or content.
 
-### 2. `netlify.toml` (new, optional but recommended)
-Pin the build command and Node version so Netlify's build image matches what we use locally:
+## Step 2 — You pick one
+I'll present the 3 rendered options via `ask_questions` (prototype type). You click the one that matches.
 
-```toml
-[build]
-  command = "bun run build"
+## Step 3 — Implement the pick in `Quote.tsx`
+Only the squircle branch changes:
+- Replace the current `[border-radius:38%_42%...]` blob with the chosen direction's radii
+- Replace `min(560px, 90vw)` + `aspectRatio: 1/1` with the chosen size/ratio
+- Update padding, text alignment, and author block layout to match
+- Standard (non-squircle) variant stays as-is
 
-[build.environment]
-  NODE_VERSION = "20"
-```
+## Step 4 — Save a reusable "block spec" convention
+Add a short memory at `mem://preferences/block-spec` describing the lightweight spec template we'll use for every future CMS block (shape, max size, alignment, padding, bg behavior, margins). Future block requests can drop a filled-in spec alongside the screenshot, which eliminates 90% of the guesswork that caused this drift.
 
-Publish directory is left to the Netlify nitro preset (it configures the output location automatically).
-
-### 3. Environment variables — configured in Netlify dashboard (no code change)
-You'll add these in Site → Site configuration → Environment variables (scoped to Production + Deploy previews):
-
-- `UMBRACO_BASE_URL` = `https://bricksdemo.euwest01.umbraco.io`
-- `UMBRACO_API_KEY` = (your Umbraco Headless Delivery API key)
-- `VITE_UMBRACO_PUBLIC_BASE_URL` = `https://bricksdemo.euwest01.umbraco.io` (optional, only if client code references it)
-- `UMBRACO_START_ITEM` = (only if your CMS uses one)
-
-No app code changes are needed — `process.env.*` is read inside server function handlers at runtime, which works identically on Netlify Functions and the Cloudflare Worker target.
+No spec is needed for blocks already shipped unless you want to revisit them.
 
 ## Out of scope
-- No changes to server functions, routes, components, or the dev server.
-- Not running the build locally to validate (the Lovable harness will run typecheck/build after the edit).
-- Not touching Lovable Cloud / Supabase config — there isn't any to migrate.
-
-## After this lands
-1. Push to the branch connected to Netlify.
-2. Add the env vars above in the Netlify dashboard.
-3. Trigger a deploy. If anything fails, check the Netlify build log and the `/_debug/umbraco` route on the deployed site.
+- No changes to the registry, settings parsing, or the non-squircle Quote layout
+- No changes to other blocks
+- No backend / CMS schema changes
