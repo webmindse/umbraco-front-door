@@ -7,6 +7,7 @@ import Card from "./Card";
 import Cards from "./Cards";
 import Hero from "./Hero";
 import Quote from "./Quote";
+import Text from "./Text";
 import TextAndMedia from "./TextAndMedia";
 
 export interface BlockComponentProps<
@@ -35,6 +36,7 @@ export const blockRegistry: Record<string, BlockComponent> = {
   textAndMedia: TextAndMedia as BlockComponent,
   accordion: Accordion as BlockComponent,
   quote: Quote as BlockComponent,
+  text: Text as BlockComponent,
 };
 
 /**
