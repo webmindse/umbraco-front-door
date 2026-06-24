@@ -1,33 +1,21 @@
 ## Goal
-Get the Quote block's squircle variant to match the design screenshot, using a proper visual-direction loop instead of guessing from a single screenshot.
+Implement the missing `text` block using the chosen "Classic editorial" direction, honoring `textSettings` the same way `Accordion` does.
 
-## Step 1 — Generate squircle design directions
-Re-attach your earlier Quote design screenshot (the squircle reference) so I can call `design--create_directions` with it. I'll request 3 refined variants of just the squircle quote card, all locked to:
+## Files
+- **Create** `src/components/umbraco/blocks/Text.tsx`
+- **Edit** `src/components/umbraco/blocks/registry.ts` — register `text: Text`
 
-- Brand mauve-shadow background, light text
-- Quote mark, quote text, author avatar, author name + title
-- Centered content (both axes)
-- Compact size (not the oversized blob we have now)
-- Smoother, more subtle squircle radii than the current implementation
-
-The three variants will differ in proportion, internal spacing, quote-mark treatment, and avatar placement — not in palette or content.
-
-## Step 2 — You pick one
-I'll present the 3 rendered options via `ask_questions` (prototype type). You click the one that matches.
-
-## Step 3 — Implement the pick in `Quote.tsx`
-Only the squircle branch changes:
-- Replace the current `[border-radius:38%_42%...]` blob with the chosen direction's radii
-- Replace `min(560px, 90vw)` + `aspectRatio: 1/1` with the chosen size/ratio
-- Update padding, text alignment, and author block layout to match
-- Standard (non-squircle) variant stays as-is
-
-## Step 4 — Save a reusable "block spec" convention
-Add a short memory at `mem://preferences/block-spec` describing the lightweight spec template we'll use for every future CMS block (shape, max size, alignment, padding, bg behavior, margins). Future block requests can drop a filled-in spec alongside the screenshot, which eliminates 90% of the guesswork that caused this drift.
-
-No spec is needed for blocks already shipped unless you want to revisit them.
+## Component shape
+- Props: `content.textContent` (rich-text envelope `{ markup }` or string), `settings` (textSettings).
+- Settings (mirrors Accordion):
+  - `fullWidth` → outer max-width 100%
+  - `containerWidth` → outer max-width (default `66%`)
+  - `contentWidth` → inner max-width (default `100%`)
+  - `backgroundColor`: `Primary` → `bg-brand-mauve-shadow text-text-light`; `Secondary` → `bg-brand-onyx text-text-light`; else transparent
+  - `applyMarginAbove` / `applyMarginBelow` → `mt-12 md:mt-16` / `mb-12 md:mb-16` (default true)
+  - `anchorId` → section id
+- When a background color is set, apply `px-8 py-12 md:px-16 md:py-16` to the colored inner wrapper (matches the screenshot's generous padding).
+- Render markup through `RichTextRenderer` with `prose` + (on dark bg) `prose-invert prose-headings:text-text-light prose-p:text-text-light/90 prose-strong:text-text-light prose-hr:border-text-light/30` — gives bold heading + thin light hr + light body, as in the selected direction.
 
 ## Out of scope
-- No changes to the registry, settings parsing, or the non-squircle Quote layout
-- No changes to other blocks
-- No backend / CMS schema changes
+- No changes to other blocks, no new tokens, no font additions (Inter already in use via prose defaults).
