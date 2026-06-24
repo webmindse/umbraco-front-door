@@ -6,6 +6,7 @@ import Accordion from "./Accordion";
 import Card from "./Card";
 import Cards from "./Cards";
 import Hero from "./Hero";
+import Quote from "./Quote";
 import TextAndMedia from "./TextAndMedia";
 
 export interface BlockComponentProps<
