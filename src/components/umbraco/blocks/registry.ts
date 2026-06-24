@@ -5,6 +5,7 @@ import type { BlockItem, JsonObject } from "@/integrations/umbraco/types";
 import Accordion from "./Accordion";
 import Card from "./Card";
 import Cards from "./Cards";
+import Counters from "./Counters";
 import Hero from "./Hero";
 import ImageBlock from "./ImageBlock";
 import Quote from "./Quote";
@@ -39,6 +40,7 @@ export const blockRegistry: Record<string, BlockComponent> = {
   quote: Quote as BlockComponent,
   text: Text as BlockComponent,
   imageBlock: ImageBlock as BlockComponent,
+  counters: Counters as BlockComponent,
 };
 
 /**
