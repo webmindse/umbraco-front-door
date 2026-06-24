@@ -60,10 +60,16 @@ export default function Text({ content, settings }: BlockComponentProps) {
             value={textContent}
             className={cn(
               "prose-sm md:prose-base leading-relaxed",
+              "prose-headings:font-semibold prose-headings:tracking-tight",
+              "prose-h1:text-3xl md:prose-h1:text-4xl",
+              "prose-h2:text-2xl md:prose-h2:text-3xl",
+              "prose-h3:text-xl md:prose-h3:text-2xl",
+              "prose-a:text-primary prose-a:underline prose-a:underline-offset-4 hover:prose-a:opacity-80",
               light &&
-                "prose-invert prose-headings:text-text-light prose-p:text-text-light/90 prose-strong:text-text-light prose-hr:border-text-light/30",
+                "prose-invert prose-headings:text-text-light prose-p:text-text-light/90 prose-strong:text-text-light prose-hr:border-text-light/30 prose-figcaption:text-text-light/70",
             )}
           />
+
         </div>
       </div>
     </section>
