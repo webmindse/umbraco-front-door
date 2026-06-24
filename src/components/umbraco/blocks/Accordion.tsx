@@ -65,80 +65,79 @@ export default function Accordion({ content, settings }: BlockComponentProps) {
     <section
       id={s.anchorId ?? undefined}
       className={cn(
-        "w-full px-6",
+        "mx-auto px-6",
         s.applyMarginAbove !== false && "mt-12 md:mt-16",
         s.applyMarginBelow !== false && "mb-12 md:mb-16",
         wrap && "py-12 md:py-16",
         wrap,
       )}
+      style={containerStyle}
     >
-      <div className="mx-auto" style={containerStyle}>
-        <div className="mx-auto" style={contentStyle}>
-          {heading ? (
-            <h2
-              className={cn(
-                "text-3xl font-semibold tracking-tight md:text-4xl",
-                light && "text-text-light",
-              )}
-            >
-              {heading}
-            </h2>
-          ) : null}
-          {text ? (
-            <p
-              className={cn(
-                "mt-4 text-base",
-                light ? "text-text-light/90" : "text-muted-foreground",
-              )}
-            >
-              {text}
-            </p>
-          ) : null}
+      <div className="mx-auto" style={contentStyle}>
+        {heading ? (
+          <h2
+            className={cn(
+              "text-3xl font-semibold tracking-tight md:text-4xl",
+              light && "text-text-light",
+            )}
+          >
+            {heading}
+          </h2>
+        ) : null}
+        {text ? (
+          <p
+            className={cn(
+              "mt-4 text-base",
+              light ? "text-text-light/90" : "text-muted-foreground",
+            )}
+          >
+            {text}
+          </p>
+        ) : null}
 
-          {items.length ? (
-            <UIAccordion
-              type="single"
-              collapsible
-              className={cn(
-                "mt-8 w-full border-t",
-                light ? "border-text-light/20" : "border-border",
-              )}
-            >
-              {items.map((item) => {
-                const c = (item.content?.properties ?? {}) as unknown as AccordionItemContent;
-                return (
-                  <AccordionItem
-                    key={item.content.id}
-                    value={item.content.id}
+        {items.length ? (
+          <UIAccordion
+            type="single"
+            collapsible
+            className={cn(
+              "mt-8 w-full border-t",
+              light ? "border-text-light/20" : "border-border",
+            )}
+          >
+            {items.map((item) => {
+              const c = (item.content?.properties ?? {}) as unknown as AccordionItemContent;
+              return (
+                <AccordionItem
+                  key={item.content.id}
+                  value={item.content.id}
+                  className={cn(
+                    "border-b",
+                    light ? "!border-text-light/20" : "border-border",
+                  )}
+                >
+                  <AccordionTrigger
                     className={cn(
-                      "border-b",
-                      light ? "!border-text-light/20" : "border-border",
+                      "py-5 text-base font-semibold hover:no-underline",
+                      light && "text-text-light [&>svg]:text-text-light",
                     )}
                   >
-                    <AccordionTrigger
-                      className={cn(
-                        "py-5 text-base font-semibold hover:no-underline",
-                        light && "text-text-light [&>svg]:text-text-light",
-                      )}
-                    >
-                      {c.heading ?? ""}
-                    </AccordionTrigger>
-                    <AccordionContent
-                      className={cn(
-                        light ? "text-text-light/90" : "text-foreground",
-                      )}
-                    >
-                      <RichTextRenderer
-                        value={c.text}
-                        className={cn(light && "prose-invert")}
-                      />
-                    </AccordionContent>
-                  </AccordionItem>
-                );
-              })}
-            </UIAccordion>
-          ) : null}
-        </div>
+                    {c.heading ?? ""}
+                  </AccordionTrigger>
+                  <AccordionContent
+                    className={cn(
+                      light ? "text-text-light/90" : "text-foreground",
+                    )}
+                  >
+                    <RichTextRenderer
+                      value={c.text}
+                      className={cn(light && "prose-invert")}
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+              );
+            })}
+          </UIAccordion>
+        ) : null}
       </div>
     </section>
   );
