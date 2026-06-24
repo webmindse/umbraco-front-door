@@ -140,7 +140,6 @@ export default function Accordion({ content, settings }: BlockComponentProps) {
             </UIAccordion>
           ) : null}
         </div>
-      </div>
     </section>
   );
 }
