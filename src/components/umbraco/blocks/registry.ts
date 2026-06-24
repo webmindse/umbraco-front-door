@@ -11,6 +11,7 @@ import ImageBlock from "./ImageBlock";
 import Quote from "./Quote";
 import Text from "./Text";
 import TextAndMedia from "./TextAndMedia";
+import Video from "./Video";
 
 export interface BlockComponentProps<
   TContent extends JsonObject = JsonObject,
@@ -41,6 +42,7 @@ export const blockRegistry: Record<string, BlockComponent> = {
   text: Text as BlockComponent,
   imageBlock: ImageBlock as BlockComponent,
   counters: Counters as BlockComponent,
+  video: Video as BlockComponent,
 };
 
 /**
