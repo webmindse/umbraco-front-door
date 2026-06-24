@@ -73,8 +73,7 @@ export default function Accordion({ content, settings }: BlockComponentProps) {
       )}
       style={containerStyle}
     >
-      
-        <div className="mx-auto" style={contentStyle}>
+      <div className="mx-auto" style={contentStyle}>
           {heading ? (
             <h2
               className={cn(
