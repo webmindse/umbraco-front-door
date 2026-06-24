@@ -65,12 +65,13 @@ export default function Accordion({ content, settings }: BlockComponentProps) {
     <section
       id={s.anchorId ?? undefined}
       className={cn(
-        "w-full px-6",
+        "mx-auto px-6",
         s.applyMarginAbove !== false && "mt-12 md:mt-16",
         s.applyMarginBelow !== false && "mb-12 md:mb-16",
         wrap && "py-12 md:py-16",
         wrap,
       )}
+      style={containerStyle}
     >
       <div className="mx-auto" style={containerStyle}>
         <div className="mx-auto" style={contentStyle}>
