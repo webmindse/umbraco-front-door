@@ -34,6 +34,7 @@ export const blockRegistry: Record<string, BlockComponent> = {
   card: Card as BlockComponent,
   textAndMedia: TextAndMedia as BlockComponent,
   accordion: Accordion as BlockComponent,
+  quote: Quote as BlockComponent,
 };
 
 /**
