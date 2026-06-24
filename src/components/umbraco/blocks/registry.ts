@@ -6,6 +6,7 @@ import Accordion from "./Accordion";
 import Card from "./Card";
 import Cards from "./Cards";
 import Hero from "./Hero";
+import ImageBlock from "./ImageBlock";
 import Quote from "./Quote";
 import Text from "./Text";
 import TextAndMedia from "./TextAndMedia";
@@ -37,6 +38,7 @@ export const blockRegistry: Record<string, BlockComponent> = {
   accordion: Accordion as BlockComponent,
   quote: Quote as BlockComponent,
   text: Text as BlockComponent,
+  imageBlock: ImageBlock as BlockComponent,
 };
 
 /**
