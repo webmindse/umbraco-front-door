@@ -5,6 +5,21 @@ interface RichTextRendererProps {
   className?: string;
 }
 
+const CMS_BASE = (import.meta.env.VITE_UMBRACO_PUBLIC_BASE_URL ?? "").replace(/\/+$/, "");
+
+/**
+ * Rewrite root-relative URLs (e.g. `/media/...`) inside the RTE markup so
+ * `<img src>` and `<a href>` resolve against the Umbraco origin rather than
+ * the frontend host. Leaves absolute URLs, anchors, mailto, and tel alone.
+ */
+function rewriteRelativeUrls(html: string): string {
+  if (!CMS_BASE) return html;
+  return html.replace(
+    /(<(?:img|a|source)\b[^>]*?\s(?:src|href))="(\/[^"#][^"]*)"/gi,
+    (_m, prefix, url) => `${prefix}="${CMS_BASE}${url}"`,
+  );
+}
+
 /**
  * Render Umbraco rich-text. Accepts either a raw HTML string or the
  * `{ markup, blocks }` envelope. HTML is trusted because it originates
@@ -12,13 +27,14 @@ interface RichTextRendererProps {
  */
 export function RichTextRenderer({ value, className }: RichTextRendererProps) {
   if (!value) return null;
-  const html =
+  const raw =
     typeof value === "string"
       ? value
       : typeof value === "object" && value !== null && "markup" in value
         ? (value as { markup?: string }).markup ?? ""
         : "";
-  if (!html) return null;
+  if (!raw) return null;
+  const html = rewriteRelativeUrls(raw);
 
   return (
     <div
