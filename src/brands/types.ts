@@ -4,7 +4,7 @@ import type { ContentItem } from "@/integrations/umbraco/types";
 
 import type { BlockComponent } from "@/components/umbraco/blocks/registry";
 
-export type BrandId = "default" | "alt";
+export type BrandId = "default" | "alt" | "variant2";
 
 export interface SiteHeaderLikeProps {
   site: ContentItem;
@@ -29,10 +29,23 @@ export interface BrandModule {
 }
 
 /**
- * Resolve the active brand from the site content item. Reads
- * `properties.useAlternativeTheme` (boolean). Defaults to "default".
+ * Resolve the active brand from the site content item.
+ *
+ * `useAlternativeTheme` is an Umbraco dropdown string:
+ *   - "Standard"    → default branding
+ *   - "Variant one" → alt branding
+ *   - "Variant two" → variant2 branding
+ *
+ * Older content may still send a boolean (true = alt) — we keep that for
+ * backwards compatibility. Anything unrecognised falls back to default.
  */
 export function resolveBrand(site: ContentItem | null | undefined): BrandId {
   const v = site?.properties?.useAlternativeTheme;
-  return v === true ? "alt" : "default";
+  if (v === true) return "alt";
+  if (typeof v === "string") {
+    const key = v.trim().toLowerCase();
+    if (key === "variant one" || key === "variantone") return "alt";
+    if (key === "variant two" || key === "varianttwo") return "variant2";
+  }
+  return "default";
 }
