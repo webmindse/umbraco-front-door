@@ -362,6 +362,11 @@
     color: var(--text-dark);
     letter-spacing: -0.01em;
   }
+
+  hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
 }
 
 @layer utilities {
