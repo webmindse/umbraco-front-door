@@ -116,6 +116,86 @@
   --border-color: rgba(255, 255, 255, 0.1);
 }
 
+/*
+ * Alternative brand. Activated by <html data-brand="alt"> via BrandProvider
+ * in SiteShell when site.useAlternativeTheme === true. Overrides the same
+ * semantic tokens so existing components automatically re-skin.
+ *
+ * Palette: #FFB997 peach, #F67E7D coral, #843B62 mauve, #0B032D deep indigo.
+ */
+:root[data-brand="alt"] {
+  /* Raw alt palette */
+  --brand-alt-peach: #FFB997;
+  --brand-alt-coral: #F67E7D;
+  --brand-alt-mauve: #843B62;
+  --brand-alt-deep-indigo: #0B032D;
+  --brand-alt-surface: #1a0f3d;
+
+  /* Re-map semantic tokens */
+  --background: var(--brand-alt-peach);
+  --foreground: var(--brand-alt-deep-indigo);
+
+  --card: #fff5ee;
+  --card-foreground: var(--brand-alt-deep-indigo);
+  --popover: #fff5ee;
+  --popover-foreground: var(--brand-alt-deep-indigo);
+
+  --primary: var(--brand-alt-coral);
+  --primary-foreground: var(--brand-alt-deep-indigo);
+
+  --secondary: var(--brand-alt-mauve);
+  --secondary-foreground: var(--brand-alt-peach);
+
+  --muted: #fde2d3;
+  --muted-foreground: #6b3a52;
+
+  --accent: var(--brand-alt-peach);
+  --accent-foreground: var(--brand-alt-deep-indigo);
+
+  --border: rgba(11, 3, 45, 0.12);
+  --input: rgba(11, 3, 45, 0.18);
+  --ring: var(--brand-alt-coral);
+
+  /* Project semantic aliases */
+  --background-secondary: var(--brand-alt-deep-indigo);
+  --background-neutral: #fff5ee;
+  --nav-background: var(--brand-alt-deep-indigo);
+  --text-dark: var(--brand-alt-deep-indigo);
+  --text-grey: #6b3a52;
+  --text-light: var(--brand-alt-peach);
+  --primary-contrast: var(--brand-alt-deep-indigo);
+  --navigation-background-none: rgba(255, 185, 151, 0.08);
+  --navigation-hover-background: rgba(246, 126, 125, 0.12);
+  --border-color: rgba(11, 3, 45, 0.12);
+
+  --gradient-left: var(--brand-alt-coral);
+  --gradient-right: var(--brand-alt-peach);
+
+  /* Brand-* aliases used by default components — repoint to alt palette */
+  --brand-onyx: var(--brand-alt-deep-indigo);
+  --brand-mauve-shadow: var(--brand-alt-mauve);
+  --brand-lavender-blush: var(--brand-alt-peach);
+  --brand-lilac: var(--brand-alt-coral);
+  --brand-custom-green: var(--brand-alt-coral);
+  --brand-custom-purple: var(--brand-alt-mauve);
+  --brand-muted-teal: var(--brand-alt-coral);
+  --brand-grey: #fff5ee;
+}
+
+:root[data-brand="alt"] body {
+  font-family: "DM Sans", var(--font-sans);
+}
+
+:root[data-brand="alt"] h1,
+:root[data-brand="alt"] h2,
+:root[data-brand="alt"] h3,
+:root[data-brand="alt"] h4,
+:root[data-brand="alt"] h5,
+:root[data-brand="alt"] h6,
+:root[data-brand="alt"] .font-display {
+  font-family: "Space Grotesk", var(--font-display);
+}
+
 @theme inline {
   --font-sans:
     "Fira Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
