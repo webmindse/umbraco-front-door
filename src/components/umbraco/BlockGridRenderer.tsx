@@ -73,6 +73,7 @@ function renderItem(item: GridItem, blockRegistry: Record<string, BlockComponent
 }
 
 export function BlockGridRenderer({ value, className }: BlockGridProps) {
+  const { blockRegistry } = useBrand();
   const grid =
     Array.isArray(value)
       ? { items: value as GridItem[], gridColumns: 12 }
@@ -86,7 +87,7 @@ export function BlockGridRenderer({ value, className }: BlockGridProps) {
       className={`grid gap-6 ${className ?? ""}`}
       style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
     >
-      {items.map(renderItem)}
+      {items.map((it) => renderItem(it, blockRegistry))}
     </div>
   );
 }
