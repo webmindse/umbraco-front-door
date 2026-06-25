@@ -133,7 +133,7 @@ export default function Card({ content, settings }: BlockComponentProps) {
     <div
       className={cn(
         "flex flex-1 flex-col",
-        boxed || mediaLeft ? "p-6" : "pt-6",
+        boxed || mediaLeft || centerContent || isLinked ? "p-6" : "pt-6",
       )}
     >
       {heading ? (
