@@ -95,10 +95,10 @@ export default function Card({ content, settings }: BlockComponentProps) {
   const showIcon = preferIcon && icon;
 
   const containerClass = cn(
-    "flex flex-col overflow-hidden",
+    "flex h-full flex-col overflow-hidden",
     boxed && "rounded-lg bg-card shadow-md",
     border && "border border-border",
-    isLinked && "transition hover:shadow-lg",
+    isLinked && "card-link transition hover:shadow-lg",
     mediaLeft && "md:grid md:grid-cols-[40%_1fr] md:items-stretch",
     centerContent && "text-center",
   );
@@ -121,7 +121,7 @@ export default function Card({ content, settings }: BlockComponentProps) {
   ) : media ? (
     <div
       className={cn(
-        "relative w-full",
+        "card-media relative w-full overflow-hidden",
         mediaLeft ? "aspect-video md:aspect-auto md:min-h-[12rem] md:h-full" : "aspect-video",
       )}
     >
@@ -133,7 +133,7 @@ export default function Card({ content, settings }: BlockComponentProps) {
     <div
       className={cn(
         "flex flex-1 flex-col",
-        boxed || mediaLeft ? "p-6" : "pt-6",
+        boxed || mediaLeft || centerContent || isLinked ? "p-6" : "pt-6",
       )}
     >
       {heading ? (

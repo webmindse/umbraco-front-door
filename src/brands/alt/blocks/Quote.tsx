@@ -22,8 +22,63 @@ export default function Quote({ content, settings }: BlockComponentProps) {
     applyMarginAbove?: boolean | null;
     applyMarginBelow?: boolean | null;
     anchorId?: string | null;
+    showAsSquircle?: boolean | null;
   };
   const image = authorImage?.[0];
+  const squircle = !!s.showAsSquircle;
+
+  if (squircle) {
+    return (
+      <section
+        id={s.anchorId ?? undefined}
+        className={`flex justify-center px-6 ${
+          s.applyMarginAbove !== false ? "mt-16 md:mt-24" : ""
+        } ${s.applyMarginBelow !== false ? "mb-16 md:mb-24" : ""}`}
+      >
+        <div
+          className="relative flex aspect-square w-full max-w-[360px] flex-col items-center justify-center p-10 text-center shadow-2xl"
+          style={{
+            borderRadius: "62% 38% 46% 54% / 52% 44% 56% 48%",
+            background:
+              "linear-gradient(135deg, var(--brand-alt-coral) 0%, var(--brand-alt-peach) 100%)",
+            color: "var(--brand-alt-deep-indigo)",
+          }}
+        >
+          <QuoteIcon className="mb-4 h-8 w-8 rotate-180 opacity-80" aria-hidden />
+          {quoteText ? (
+            <p className="mb-6 max-w-[240px] font-display text-lg font-semibold leading-snug md:text-xl">
+              {quoteText}
+            </p>
+          ) : null}
+          {(author || authorTitle || image) && (
+            <div className="flex items-center gap-3">
+              {image ? (
+                <UmbracoImage
+                  media={image}
+                  width={44}
+                  height={44}
+                  alt={author ?? image.name}
+                  className="h-11 w-11 rounded-full object-cover ring-2 ring-white/40"
+                />
+              ) : null}
+              <div className="text-left leading-tight">
+                {author ? (
+                  <div className="font-display text-xs font-bold uppercase tracking-[0.14em]">
+                    {author}
+                  </div>
+                ) : null}
+                {authorTitle ? (
+                  <div className="mt-0.5 text-[0.65rem] uppercase tracking-[0.18em] opacity-70">
+                    {authorTitle}
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
