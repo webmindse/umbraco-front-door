@@ -182,7 +182,8 @@
   --brand-grey: #fff5ee;
 }
 
-[data-brand="alt"] body {
+[data-brand="alt"],
+[data-brand="alt"] * {
   font-family: "DM Sans", var(--font-sans);
 }
 
