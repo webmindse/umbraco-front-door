@@ -95,10 +95,10 @@ export default function Card({ content, settings }: BlockComponentProps) {
   const showIcon = preferIcon && icon;
 
   const containerClass = cn(
-    "flex flex-col overflow-hidden",
+    "flex h-full flex-col overflow-hidden",
     boxed && "rounded-lg bg-card shadow-md",
     border && "border border-border",
-    isLinked && "transition hover:shadow-lg",
+    isLinked && "card-link transition hover:shadow-lg",
     mediaLeft && "md:grid md:grid-cols-[40%_1fr] md:items-stretch",
     centerContent && "text-center",
   );
