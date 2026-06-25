@@ -197,6 +197,87 @@
   font-family: "Space Grotesk", var(--font-display);
 }
 
+/*
+ * Variant two brand. Activated by <html data-brand="variant2"> when
+ * site.useAlternativeTheme === "Variant two". Editorial nature palette:
+ * forest green, moss, warm gold, cream. Playfair Display + Source Sans 3.
+ */
+[data-brand="variant2"] {
+  /* Raw variant2 palette */
+  --brand-v2-cream: #F4EFE6;
+  --brand-v2-forest: #1F3A2E;
+  --brand-v2-moss: #5B7553;
+  --brand-v2-gold: #C9A961;
+  --brand-v2-charcoal: #14201A;
+  --brand-v2-bone: #FBF7F0;
+
+  /* Re-map semantic tokens */
+  --background: var(--brand-v2-bone);
+  --foreground: var(--brand-v2-charcoal);
+
+  --card: #ffffff;
+  --card-foreground: var(--brand-v2-charcoal);
+  --popover: #ffffff;
+  --popover-foreground: var(--brand-v2-charcoal);
+
+  --primary: var(--brand-v2-forest);
+  --primary-foreground: var(--brand-v2-cream);
+
+  --secondary: var(--brand-v2-gold);
+  --secondary-foreground: var(--brand-v2-charcoal);
+
+  --muted: var(--brand-v2-cream);
+  --muted-foreground: #4a5a4f;
+
+  --accent: var(--brand-v2-gold);
+  --accent-foreground: var(--brand-v2-charcoal);
+
+  --border: rgba(31, 58, 46, 0.14);
+  --input: rgba(31, 58, 46, 0.2);
+  --ring: var(--brand-v2-gold);
+
+  /* Project semantic aliases */
+  --background-secondary: var(--brand-v2-forest);
+  --background-neutral: var(--brand-v2-cream);
+  --nav-background: var(--brand-v2-forest);
+  --text-dark: var(--brand-v2-charcoal);
+  --text-grey: #4a5a4f;
+  --text-light: var(--brand-v2-cream);
+  --primary-contrast: var(--brand-v2-cream);
+  --navigation-background-none: rgba(31, 58, 46, 0.06);
+  --navigation-hover-background: rgba(201, 169, 97, 0.16);
+  --border-color: rgba(31, 58, 46, 0.14);
+
+  --gradient-left: var(--brand-v2-gold);
+  --gradient-right: var(--brand-v2-moss);
+
+  /* Brand-* aliases used by default components — repoint to variant2 palette */
+  --brand-onyx: var(--brand-v2-forest);
+  --brand-mauve-shadow: var(--brand-v2-forest);
+  --brand-lavender-blush: var(--brand-v2-cream);
+  --brand-lilac: var(--brand-v2-gold);
+  --brand-custom-green: var(--brand-v2-forest);
+  --brand-custom-purple: var(--brand-v2-moss);
+  --brand-muted-teal: var(--brand-v2-gold);
+  --brand-grey: var(--brand-v2-cream);
+}
+
+[data-brand="variant2"],
+[data-brand="variant2"] * {
+  font-family: "Source Sans 3", var(--font-sans);
+}
+
+[data-brand="variant2"] h1,
+[data-brand="variant2"] h2,
+[data-brand="variant2"] h3,
+[data-brand="variant2"] h4,
+[data-brand="variant2"] h5,
+[data-brand="variant2"] h6,
+[data-brand="variant2"] .font-display {
+  font-family: "Playfair Display", var(--font-display);
+  letter-spacing: -0.015em;
+}
+
 @theme inline {
   --font-sans:
     "Fira Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
