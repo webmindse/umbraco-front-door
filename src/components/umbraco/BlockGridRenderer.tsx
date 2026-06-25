@@ -1,6 +1,6 @@
 import type { JsonObject, JsonValue } from "@/integrations/umbraco/types";
+import { useBrand } from "@/brands/BrandContext";
 
-import { blockRegistry } from "./blocks/registry";
 import MissingBlock from "./blocks/MissingBlock";
 
 // Block Grid item shape (Delivery API v2):
