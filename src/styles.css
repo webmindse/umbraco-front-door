@@ -212,7 +212,7 @@
   --brand-v2-honey-bronze: #DE9E36;
 
   /* Re-map semantic tokens */
-  --background: var(--brand-v2-pale-slate);
+  --background: #ffffff;
   --foreground: var(--brand-v2-shadow-grey);
 
   --card: #ffffff;
