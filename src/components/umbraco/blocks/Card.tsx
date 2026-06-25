@@ -121,7 +121,7 @@ export default function Card({ content, settings }: BlockComponentProps) {
   ) : media ? (
     <div
       className={cn(
-        "relative w-full",
+        "card-media relative w-full overflow-hidden",
         mediaLeft ? "aspect-video md:aspect-auto md:min-h-[12rem] md:h-full" : "aspect-video",
       )}
     >
