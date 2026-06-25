@@ -61,8 +61,7 @@ export function SiteFooter({ site }: SiteFooterProps) {
               <UmbracoImage
                 media={footerLogo}
                 alt={site.name}
-                height={56}
-                className="h-14 w-auto"
+                className="h-14 w-auto object-contain"
               />
             ) : (
               <span className="font-display text-3xl font-bold tracking-tight">
