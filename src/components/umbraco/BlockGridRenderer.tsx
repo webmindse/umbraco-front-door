@@ -1,6 +1,7 @@
 import type { JsonObject, JsonValue } from "@/integrations/umbraco/types";
+import { useBrand } from "@/brands/BrandContext";
+import type { BlockComponent } from "./blocks/registry";
 
-import { blockRegistry } from "./blocks/registry";
 import MissingBlock from "./blocks/MissingBlock";
 
 // Block Grid item shape (Delivery API v2):
@@ -31,7 +32,7 @@ interface BlockGridProps {
   className?: string;
 }
 
-function renderItem(item: GridItem) {
+function renderItem(item: GridItem, blockRegistry: Record<string, BlockComponent>) {
   const alias = item.content?.contentType;
   const Component = alias ? blockRegistry[alias] : undefined;
   const cellStyle = {
@@ -62,7 +63,7 @@ function renderItem(item: GridItem) {
                 gridTemplateColumns: `repeat(${area.columnSpan ?? 12}, minmax(0, 1fr))`,
               }}
             >
-              {area.items.map(renderItem)}
+              {area.items.map((it) => renderItem(it, blockRegistry))}
             </div>
           ))}
         </div>
@@ -72,6 +73,7 @@ function renderItem(item: GridItem) {
 }
 
 export function BlockGridRenderer({ value, className }: BlockGridProps) {
+  const { blockRegistry } = useBrand();
   const grid =
     Array.isArray(value)
       ? { items: value as GridItem[], gridColumns: 12 }
@@ -85,7 +87,7 @@ export function BlockGridRenderer({ value, className }: BlockGridProps) {
       className={`grid gap-6 ${className ?? ""}`}
       style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
     >
-      {items.map(renderItem)}
+      {items.map((it) => renderItem(it, blockRegistry))}
     </div>
   );
 }

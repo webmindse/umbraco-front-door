@@ -1,6 +1,6 @@
 import type { BlockItem, JsonObject } from "@/integrations/umbraco/types";
+import { useBrand } from "@/brands/BrandContext";
 
-import { blockRegistry, silentBlockAliases } from "./blocks/registry";
 import MissingBlock from "./blocks/MissingBlock";
 
 interface BlockListRendererProps {
@@ -8,6 +8,7 @@ interface BlockListRendererProps {
 }
 
 export function BlockListRenderer({ items }: BlockListRendererProps) {
+  const { blockRegistry, silentBlockAliases } = useBrand();
   if (!items?.length) return null;
   return (
     <>
