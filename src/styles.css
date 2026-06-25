@@ -123,7 +123,7 @@
  *
  * Palette: #FFB997 peach, #F67E7D coral, #843B62 mauve, #0B032D deep indigo.
  */
-:root[data-brand="alt"] {
+[data-brand="alt"] {
   /* Raw alt palette */
   --brand-alt-peach: #FFB997;
   --brand-alt-coral: #F67E7D;
@@ -182,17 +182,17 @@
   --brand-grey: #fff5ee;
 }
 
-:root[data-brand="alt"] body {
+[data-brand="alt"] body {
   font-family: "DM Sans", var(--font-sans);
 }
 
-:root[data-brand="alt"] h1,
-:root[data-brand="alt"] h2,
-:root[data-brand="alt"] h3,
-:root[data-brand="alt"] h4,
-:root[data-brand="alt"] h5,
-:root[data-brand="alt"] h6,
-:root[data-brand="alt"] .font-display {
+[data-brand="alt"] h1,
+[data-brand="alt"] h2,
+[data-brand="alt"] h3,
+[data-brand="alt"] h4,
+[data-brand="alt"] h5,
+[data-brand="alt"] h6,
+[data-brand="alt"] .font-display {
   font-family: "Space Grotesk", var(--font-display);
 }
 
