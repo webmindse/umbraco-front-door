@@ -1,5 +1,6 @@
 import type { JsonObject, JsonValue } from "@/integrations/umbraco/types";
 import { useBrand } from "@/brands/BrandContext";
+import type { BlockComponent } from "./blocks/registry";
 
 import MissingBlock from "./blocks/MissingBlock";
 
@@ -62,7 +63,7 @@ function renderItem(item: GridItem, blockRegistry: Record<string, BlockComponent
                 gridTemplateColumns: `repeat(${area.columnSpan ?? 12}, minmax(0, 1fr))`,
               }}
             >
-              {area.items.map(renderItem)}
+              {area.items.map((it) => renderItem(it, blockRegistry))}
             </div>
           ))}
         </div>
