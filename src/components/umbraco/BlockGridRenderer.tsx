@@ -31,7 +31,7 @@ interface BlockGridProps {
   className?: string;
 }
 
-function renderItem(item: GridItem) {
+function renderItem(item: GridItem, blockRegistry: Record<string, BlockComponent>) {
   const alias = item.content?.contentType;
   const Component = alias ? blockRegistry[alias] : undefined;
   const cellStyle = {
