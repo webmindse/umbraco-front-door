@@ -56,7 +56,7 @@ export function SiteFooter({ site }: SiteFooterProps) {
       <div className="h-px w-full bg-gradient-to-r from-transparent via-[color:var(--brand-alt-coral)] to-transparent" />
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-12 md:grid-cols-3">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col items-start gap-4">
             {footerLogo ? (
               <UmbracoImage
                 media={footerLogo}
