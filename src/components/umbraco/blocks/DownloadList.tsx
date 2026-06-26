@@ -7,9 +7,11 @@ import { cn } from "@/lib/utils";
 
 import type { BlockComponentProps } from "./registry";
 
+type DownloadMedia = UmbracoMediaLike & { bytes?: number | null; extension?: string | null };
+
 interface DownloadListFileContent {
   title?: string;
-  downloadFile?: UmbracoMediaLike[];
+  downloadFile?: DownloadMedia[];
 }
 
 interface DownloadListContent {
