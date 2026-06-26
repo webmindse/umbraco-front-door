@@ -44,6 +44,7 @@ export const blockRegistry: Record<string, BlockComponent> = {
   imageBlock: ImageBlock as BlockComponent,
   counters: Counters as BlockComponent,
   video: Video as BlockComponent,
+  downloadList: DownloadList as BlockComponent,
 };
 
 /**
@@ -53,4 +54,5 @@ export const blockRegistry: Record<string, BlockComponent> = {
  */
 export const silentBlockAliases: ReadonlySet<string> = new Set([
   "footerNavigationItem",
+  "downloadListFile",
 ]);
