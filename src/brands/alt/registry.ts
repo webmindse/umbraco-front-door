@@ -9,6 +9,7 @@ import Accordion from "@/components/umbraco/blocks/Accordion";
 import Card from "@/components/umbraco/blocks/Card";
 import Cards from "@/components/umbraco/blocks/Cards";
 import Counters from "@/components/umbraco/blocks/Counters";
+import DownloadList from "@/components/umbraco/blocks/DownloadList";
 import ImageBlock from "@/components/umbraco/blocks/ImageBlock";
 import Text from "@/components/umbraco/blocks/Text";
 import TextAndMedia from "@/components/umbraco/blocks/TextAndMedia";
