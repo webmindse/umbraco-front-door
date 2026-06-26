@@ -30,6 +30,7 @@ export const blockRegistry: Record<string, BlockComponent> = {
   imageBlock: ImageBlock as BlockComponent,
   counters: Counters as BlockComponent,
   video: Video as BlockComponent,
+  downloadList: DownloadList as BlockComponent,
 };
 
 export const silentBlockAliases = defaultSilent;
