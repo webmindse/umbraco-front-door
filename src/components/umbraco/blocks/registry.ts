@@ -6,6 +6,7 @@ import Accordion from "./Accordion";
 import Card from "./Card";
 import Cards from "./Cards";
 import Counters from "./Counters";
+import DownloadList from "./DownloadList";
 import Hero from "./Hero";
 import ImageBlock from "./ImageBlock";
 import Quote from "./Quote";
@@ -43,6 +44,7 @@ export const blockRegistry: Record<string, BlockComponent> = {
   imageBlock: ImageBlock as BlockComponent,
   counters: Counters as BlockComponent,
   video: Video as BlockComponent,
+  downloadList: DownloadList as BlockComponent,
 };
 
 /**
@@ -52,4 +54,5 @@ export const blockRegistry: Record<string, BlockComponent> = {
  */
 export const silentBlockAliases: ReadonlySet<string> = new Set([
   "footerNavigationItem",
+  "downloadListFile",
 ]);
