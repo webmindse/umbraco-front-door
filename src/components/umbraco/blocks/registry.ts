@@ -6,6 +6,7 @@ import Accordion from "./Accordion";
 import Card from "./Card";
 import Cards from "./Cards";
 import Counters from "./Counters";
+import DownloadList from "./DownloadList";
 import Hero from "./Hero";
 import ImageBlock from "./ImageBlock";
 import Quote from "./Quote";
