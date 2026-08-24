@@ -25,8 +25,8 @@ interface VideoSettings {
 }
 
 const BG_CLASSES: Record<string, string> = {
-  Primary: "bg-brand-mauve-shadow text-text-light",
-  Secondary: "bg-brand-onyx text-text-light",
+  Primary: "bg-background-primary text-background-primary-contrast",
+  Secondary: "bg-background-secondary text-background-secondary-contrast",
 };
 
 /** Extract a YouTube video id from a URL or accept a raw id. */
