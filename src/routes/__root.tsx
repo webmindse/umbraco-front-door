@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, type ReactNode, type DetailedHTMLProps, type LinkHTMLAttributes } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -94,18 +94,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     const data = loaderData as RootLoaderData | undefined;
     const faviconUrl = data?.favicon?.url ? resolveUmbracoMediaUrl(data.favicon.url) : null;
 
-    const links = [
+    const links: Array<DetailedHTMLProps<LinkHTMLAttributes<HTMLLinkElement>, HTMLLinkElement>> = [
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" as const },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700&display=swap",
       },
-    ] as const;
+    ];
 
     const finalLinks = faviconUrl
-      ? ([...links, { rel: "icon", type: "image/png", href: faviconUrl }] as const)
+      ? [...links, { rel: "icon", type: "image/png", href: faviconUrl }]
       : links;
 
     return {
