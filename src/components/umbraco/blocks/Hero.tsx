@@ -37,6 +37,80 @@ interface HeroSettings {
 
 const ANIMATED_TOKEN = "#animatedWords";
 
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+  return reduced;
+}
+
+function WordCarousel({
+  words,
+  className,
+}: {
+  words: string[];
+  className?: string;
+}) {
+  const reducedMotion = usePrefersReducedMotion();
+  const count = words.length;
+
+  if (count === 0) return null;
+  if (count === 1 || reducedMotion) {
+    return <span className={className}>{words[0]}</span>;
+  }
+
+  const duration = count * 2.5;
+  const items = [...words, words[0]];
+  const styleId = `word-carousel-${count}`;
+
+  const step = 100 / count;
+  const hold = step * 0.75;
+
+  const keyframes = Array.from({ length: count }, (_, i) => {
+    const start = i * step;
+    const end = (i + 1) * step;
+    const translate = -((i / (count + 1)) * 100).toFixed(2);
+    const nextTranslate = -(((i + 1) / (count + 1)) * 100).toFixed(2);
+    return `${start.toFixed(2)}%, ${(start + hold).toFixed(2)}% { transform: translateY(${translate}%); }
+${end.toFixed(2)}% { transform: translateY(${nextTranslate}%); }`;
+  }).join("\n");
+
+  return (
+    <>
+      <style>{`@keyframes ${styleId} { ${keyframes} }`}</style>
+      <span
+        className={cn(
+          "relative inline-flex h-[1.1em] flex-col overflow-hidden align-baseline",
+          className,
+        )}
+      >
+        <span
+          className="flex flex-col"
+          style={{
+            animation: `${styleId} ${duration}s cubic-bezier(0.76, 0, 0.24, 1) infinite`,
+          }}
+        >
+          {items.map((word, i) => (
+            <span
+              key={i}
+              className="flex h-[1.1em] items-center"
+              aria-hidden={i === count ? true : undefined}
+            >
+              {word}
+            </span>
+          ))}
+        </span>
+      </span>
+    </>
+  );
+}
+
 function useAnimatedWord(words: string[] | undefined): string | null {
   const [index, setIndex] = useState(0);
   useEffect(() => {
