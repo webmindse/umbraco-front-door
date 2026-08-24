@@ -8,6 +8,8 @@ import { PageRenderer } from "@/components/umbraco/PageRenderer";
 import { getContentByRoute } from "@/lib/umbraco.functions";
 import type { ContentItem } from "@/integrations/umbraco/types";
 import { reportLovableError } from "@/lib/lovable-error-reporting";
+import { extractFaviconUrl, siteQueryOptions } from "@/components/site/site-data";
+import { inferCultureFromPath } from "@/lib/culture";
 
 type PageFetcher = (args: { data: { path: string } }) => Promise<ContentItem | null>;
 

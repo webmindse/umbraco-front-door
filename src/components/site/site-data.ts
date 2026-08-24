@@ -7,6 +7,7 @@ import {
   getSiteForPath,
 } from "@/lib/umbraco.functions";
 import type { Culture } from "@/lib/culture";
+import { resolveUmbracoMediaUrl } from "@/components/umbraco/UmbracoImage";
 
 type ByIdFetcher = (args: {
   data: { id: string; culture: Culture };
@@ -65,4 +66,11 @@ export function navQueryOptions(
     staleTime: 5 * 60_000,
     enabled: Boolean(rootId),
   });
+}
+
+/** Absolute URL for the site's favicon media item, when set. */
+export function extractFaviconUrl(site: ContentItem | null | undefined): string | null {
+  const favicon = (site?.properties?.favicon as Array<{ url?: string }> | undefined)?.[0];
+  if (!favicon?.url) return null;
+  return resolveUmbracoMediaUrl(favicon.url);
 }
