@@ -104,8 +104,7 @@ export const getNavigationDescendants = createServerFn({ method: "GET" })
   .handler(({ data }) => {
     const params = new URLSearchParams();
     params.set("fetch", `descendants:${data.rootId}`);
-    params.append("filter", "contentType:page");
-    params.append("filter", "contentType:feed");
+    params.set("filter", "contentType:page,feed");
     params.set("take", "200");
     return umbracoFetch<ContentResponse>(`/content?${params.toString()}`, {
       culture: data.culture,
