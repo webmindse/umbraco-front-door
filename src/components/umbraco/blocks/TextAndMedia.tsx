@@ -321,9 +321,9 @@ export default function TextAndMedia({ content, settings }: BlockComponentProps)
     return (
       <section id={s.anchorId ?? undefined} className={sectionClass}>
         <div className={containerClass}>
-          <div className={cn("flex flex-col gap-8", innerClass)}>
+          <div className={cn("flex flex-col gap-0", innerClass)}>
             {alignment === "Above" && mediaWithCaption}
-            {textNode}
+            <div className="p-6 md:p-12">{textNode}</div>
             {alignment === "Below" && mediaWithCaption}
           </div>
         </div>
