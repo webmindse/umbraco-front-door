@@ -189,7 +189,7 @@ export default function Video({ content, settings }: BlockComponentProps) {
             "prose-h2:text-2xl md:prose-h2:text-3xl",
             "prose-h3:text-xl md:prose-h3:text-2xl",
             "prose-headings:font-semibold prose-headings:tracking-tight",
-            "prose-a:text-primary prose-a:underline prose-a:underline-offset-4 hover:prose-a:opacity-80",
+            "prose-a:text-link prose-a:underline prose-a:underline-offset-4 hover:prose-a:opacity-80",
             onDark &&
               "prose-invert prose-headings:text-text-light prose-p:text-text-light/90 prose-strong:text-text-light",
           )}
