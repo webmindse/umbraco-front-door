@@ -77,21 +77,24 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+type SiteFetcher = (args: { data: { culture: Culture } }) => Promise<ContentItem>;
+
+type RootLoaderData = {
+  favicon: { url: string; name?: string } | null;
+};
+
+function extractFavicon(site: ContentItem | null | undefined) {
+  const favicon = (site?.properties?.favicon as Array<{ url?: string; name?: string }> | undefined)?.[0];
+  if (!favicon?.url) return null;
+  return { url: favicon.url, name: favicon.name };
+}
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-    ],
-    links: [
+  head: ({ loaderData }) => {
+    const data = loaderData as RootLoaderData | undefined;
+    const faviconUrl = data?.favicon?.url ? resolveUmbracoMediaUrl(data.favicon.url) : null;
+
+    const links: Array<{ rel: string; href: string; type?: string; crossOrigin?: string }> = [
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
@@ -99,8 +102,33 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700&display=swap",
       },
-    ],
-  }),
+    ];
+
+    if (faviconUrl) {
+      links.push({ rel: "icon", type: "image/png", href: faviconUrl });
+    }
+
+    return {
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { title: "Lovable App" },
+        { name: "description", content: "Lovable Generated Project" },
+        { name: "author", content: "Lovable" },
+        { property: "og:title", content: "Lovable App" },
+        { property: "og:description", content: "Lovable Generated Project" },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary" },
+        { name: "twitter:site", content: "@Lovable" },
+      ],
+      links,
+    };
+  },
+  loader: async ({ context }) => {
+    const site = await (getSite as unknown as SiteFetcher)({ data: { culture: "sv" } });
+    await context.queryClient.prefetchQuery(siteQueryOptions("sv"));
+    return { favicon: extractFavicon(site) } satisfies RootLoaderData;
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
