@@ -60,9 +60,16 @@
   --ring: var(--brand-custom-green);
 
   /* Project-specific semantic aliases (mirroring Phase 0 inputs) */
+  --background-primary: var(--brand-mauve-shadow);
+  --background-primary-contrast: var(--brand-white);
   --background-secondary: var(--brand-onyx);
+  --background-secondary-contrast: var(--brand-white);
   --background-neutral: var(--brand-grey);
   --nav-background: var(--brand-onyx);
+  --nav-foreground: var(--brand-white);
+  --nav-secondary-background: var(--brand-onyx);
+  --nav-secondary-foreground: var(--brand-white);
+  --link: var(--brand-custom-green);
   --text-dark: var(--brand-gray20);
   --text-grey: var(--brand-gray40);
   --text-light: var(--brand-white);
