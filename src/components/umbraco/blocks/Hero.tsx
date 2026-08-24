@@ -188,11 +188,13 @@ export default function Hero({ content, settings }: BlockComponentProps) {
   const minHeight = `${height ?? 80}vh`;
 
   const image = media?.[0];
-  const currentWord = useAnimatedWord(animatedWords);
 
   // Split heading on the literal #animatedWords token.
   const headingParts = (heading ?? "").split(ANIMATED_TOKEN);
-  const hasToken = headingParts.length > 1 && currentWord;
+  const hasToken =
+    headingParts.length > 1 &&
+    Array.isArray(animatedWords) &&
+    animatedWords.length > 0;
 
   const handleScroll = () => {
     if (typeof window === "undefined") return;
