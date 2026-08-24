@@ -2,6 +2,8 @@ import type { BlockItem, ContentItem, JsonObject, JsonValue } from "@/integratio
 
 import { BlockGridRenderer } from "./BlockGridRenderer";
 import { BlockListRenderer } from "./BlockListRenderer";
+import { Feed } from "./Feed";
+import { PostRenderer } from "./PostRenderer";
 
 interface PageRendererProps {
   page: ContentItem;
@@ -16,6 +18,12 @@ export function PageRenderer({ page }: PageRendererProps) {
   const props = (page.properties ?? {}) as JsonObject;
   const entries = Object.entries(props);
 
+  if (page.contentType === "post") {
+    return <PostRenderer post={page} />;
+  }
+
+  const isFeed = page.contentType === "feed";
+
   return (
     <article>
       {entries.map(([key, value]) => {
@@ -28,6 +36,7 @@ export function PageRenderer({ page }: PageRendererProps) {
         }
         return null;
       })}
+      {isFeed ? <Feed feed={page} /> : null}
     </article>
   );
 }
