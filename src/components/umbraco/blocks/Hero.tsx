@@ -111,24 +111,6 @@ ${end.toFixed(2)}% { transform: translateY(${nextTranslate}%); }`;
   );
 }
 
-function useAnimatedWord(words: string[] | undefined): string | null {
-  const [index, setIndex] = useState(0);
-  useEffect(() => {
-    if (!words || words.length <= 1) return;
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
-    ) {
-      return;
-    }
-    const id = window.setInterval(() => {
-      setIndex((i) => (i + 1) % words.length);
-    }, 2500);
-    return () => window.clearInterval(id);
-  }, [words]);
-  if (!words || words.length === 0) return null;
-  return words[index % words.length];
-}
 
 function variantFor(color: ButtonColor | undefined) {
   switch (color) {
