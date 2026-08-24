@@ -31,6 +31,12 @@
   /* Semantic tokens */
   --radius: 0.5rem;
 
+  /* Typography (overridden per-site by CMS `bodyFont` / `headingsFont`) */
+  --body-font:
+    "Fira Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --heading-font: "Fira Sans", ui-sans-serif, system-ui, sans-serif;
+
+
   --background: var(--brand-white);
   --foreground: var(--brand-gray20);
 
@@ -125,10 +131,9 @@
 
 
 @theme inline {
-  --font-sans:
-    "Fira Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-display:
-    "Fira Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--body-font);
+  --font-display: var(--heading-font);
+
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
