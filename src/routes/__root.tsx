@@ -94,19 +94,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     const data = loaderData as RootLoaderData | undefined;
     const faviconUrl = data?.favicon?.url ? resolveUmbracoMediaUrl(data.favicon.url) : null;
 
-    const links: Array<{ rel: string; href: string; type?: string; crossOrigin?: string }> = [
+    const links = [
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" as const },
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700&display=swap",
       },
-    ];
+    ] as const;
 
-    if (faviconUrl) {
-      links.push({ rel: "icon", type: "image/png", href: faviconUrl });
-    }
+    const finalLinks = faviconUrl
+      ? ([...links, { rel: "icon", type: "image/png", href: faviconUrl }] as const)
+      : links;
 
     return {
       meta: [
