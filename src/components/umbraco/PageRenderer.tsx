@@ -18,6 +18,12 @@ export function PageRenderer({ page }: PageRendererProps) {
   const props = (page.properties ?? {}) as JsonObject;
   const entries = Object.entries(props);
 
+  if (page.contentType === "post") {
+    return <PostRenderer post={page} />;
+  }
+
+  const isFeed = page.contentType === "feed";
+
   return (
     <article>
       {entries.map(([key, value]) => {
