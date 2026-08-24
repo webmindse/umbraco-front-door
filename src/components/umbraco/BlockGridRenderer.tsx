@@ -85,7 +85,7 @@ export function BlockGridRenderer({ value, className }: BlockGridProps) {
       className={`grid gap-6 ${className ?? ""}`}
       style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
     >
-      {items.map((it) => renderItem(it, registry))}
+      {items.map((it) => renderItem(it, blockRegistry))}
     </div>
   );
 }
