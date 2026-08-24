@@ -61,7 +61,7 @@ export function SiteHeader({
 
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-nav-background text-text-light">
+    <header className="sticky top-0 z-40 w-full bg-nav-background text-nav-foreground">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link to={fallbackRoutes[culture]} className="flex items-center" aria-label={site.name}>
           {logo ? (

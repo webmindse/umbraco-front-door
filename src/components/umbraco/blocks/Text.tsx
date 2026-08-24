@@ -24,9 +24,9 @@ interface TextSettings {
 function bgClasses(color: BgColor): { wrap: string; light: boolean } {
   switch (color) {
     case "Primary":
-      return { wrap: "bg-brand-mauve-shadow text-text-light", light: true };
+      return { wrap: "bg-background-primary text-background-primary-contrast", light: true };
     case "Secondary":
-      return { wrap: "bg-brand-onyx text-text-light", light: true };
+      return { wrap: "bg-background-secondary text-background-secondary-contrast", light: true };
     default:
       return { wrap: "", light: false };
   }
@@ -64,7 +64,7 @@ export default function Text({ content, settings }: BlockComponentProps) {
               "prose-h1:text-3xl md:prose-h1:text-4xl",
               "prose-h2:text-2xl md:prose-h2:text-3xl",
               "prose-h3:text-xl md:prose-h3:text-2xl",
-              "prose-a:text-primary prose-a:underline prose-a:underline-offset-4 hover:prose-a:opacity-80",
+              "prose-a:text-link prose-a:underline prose-a:underline-offset-4 hover:prose-a:opacity-80",
               light &&
                 "prose-invert prose-headings:text-text-light prose-p:text-text-light/90 prose-strong:text-text-light prose-hr:border-text-light/30 prose-figcaption:text-text-light/70",
             )}

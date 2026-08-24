@@ -1,6 +1,5 @@
 import type { JsonObject, JsonValue } from "@/integrations/umbraco/types";
-import { useBrand } from "@/brands/BrandContext";
-import type { BlockComponent } from "./blocks/registry";
+import { blockRegistry, type BlockComponent } from "./blocks/registry";
 
 import MissingBlock from "./blocks/MissingBlock";
 
@@ -32,9 +31,9 @@ interface BlockGridProps {
   className?: string;
 }
 
-function renderItem(item: GridItem, blockRegistry: Record<string, BlockComponent>) {
+function renderItem(item: GridItem, registry: Record<string, BlockComponent>) {
   const alias = item.content?.contentType;
-  const Component = alias ? blockRegistry[alias] : undefined;
+  const Component = alias ? registry[alias] : undefined;
   const cellStyle = {
     gridColumn: item.columnSpan ? `span ${item.columnSpan}` : undefined,
     gridRow: item.rowSpan ? `span ${item.rowSpan}` : undefined,
@@ -63,7 +62,7 @@ function renderItem(item: GridItem, blockRegistry: Record<string, BlockComponent
                 gridTemplateColumns: `repeat(${area.columnSpan ?? 12}, minmax(0, 1fr))`,
               }}
             >
-              {area.items.map((it) => renderItem(it, blockRegistry))}
+              {area.items.map((it) => renderItem(it, registry))}
             </div>
           ))}
         </div>
@@ -73,7 +72,6 @@ function renderItem(item: GridItem, blockRegistry: Record<string, BlockComponent
 }
 
 export function BlockGridRenderer({ value, className }: BlockGridProps) {
-  const { blockRegistry } = useBrand();
   const grid =
     Array.isArray(value)
       ? { items: value as GridItem[], gridColumns: 12 }

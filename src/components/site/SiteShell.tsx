@@ -1,16 +1,16 @@
-import { useEffect, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { inferCultureFromPath, otherCulture, type Culture } from "@/lib/culture";
 import type { ContentItem } from "@/integrations/umbraco/types";
-import { BrandProvider } from "@/brands/BrandContext";
-import { resolveBrand } from "@/brands/types";
-import { getBrand } from "@/brands/BrandContext";
 
 import { Breadcrumbs } from "./Breadcrumbs";
 import { buildNavTree } from "./NavLevel";
 import { navQueryOptions, siteQueryOptions } from "./site-data";
+import { SiteHeader } from "./SiteHeader";
+import { SiteFooter } from "./SiteFooter";
+import { SiteThemeStyle } from "./SiteThemeStyle";
 
 interface SiteShellProps {
   children: ReactNode;
@@ -42,30 +42,18 @@ export function SiteShell({ children, currentPage }: SiteShellProps) {
   const navItems = navResp.items ?? [];
   const nav = buildNavTree(navItems, rootPath);
 
-  const brandId = resolveBrand(site);
-  const brand = getBrand(brandId);
-  const { SiteHeader, SiteFooter } = brand;
-
-  // Reflect active brand on <html> so token overrides apply globally.
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    document.documentElement.setAttribute("data-brand", brandId);
-  }, [brandId]);
-
   const hideBreadcrumbs =
     (currentPage?.properties?.hideBreadcrumbs as boolean | undefined) === true;
   const showBreadcrumbs = Boolean(currentPage) && !hideBreadcrumbs;
 
   return (
-    <BrandProvider brand={brandId}>
-      <div
-        data-brand={brandId}
-        className="flex min-h-screen flex-col bg-background text-foreground"
-      >
+    <>
+      <SiteThemeStyle site={site} />
+      <div className="flex min-h-screen flex-col bg-background text-foreground">
         <SiteHeader
           site={site}
           otherSite={otherSiteData ?? null}
-          nav={nav as never}
+          nav={nav}
           culture={culture}
           currentPage={currentPage ?? null}
           fallbackRoutes={fallbackRoutes}
@@ -76,6 +64,6 @@ export function SiteShell({ children, currentPage }: SiteShellProps) {
         <main className="flex-1">{children}</main>
         <SiteFooter site={site} />
       </div>
-    </BrandProvider>
+    </>
   );
 }

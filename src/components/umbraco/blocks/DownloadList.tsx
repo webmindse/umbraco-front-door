@@ -35,9 +35,9 @@ interface DownloadListSettings {
 function bgClasses(color: BgColor): { wrap: string; light: boolean } {
   switch (color) {
     case "Primary":
-      return { wrap: "bg-brand-mauve-shadow text-text-light", light: true };
+      return { wrap: "bg-background-primary text-background-primary-contrast", light: true };
     case "Secondary":
-      return { wrap: "bg-brand-onyx text-text-light", light: true };
+      return { wrap: "bg-background-secondary text-background-secondary-contrast", light: true };
     default:
       return { wrap: "", light: false };
   }

@@ -60,9 +60,16 @@
   --ring: var(--brand-custom-green);
 
   /* Project-specific semantic aliases (mirroring Phase 0 inputs) */
+  --background-primary: var(--brand-mauve-shadow);
+  --background-primary-contrast: var(--brand-white);
   --background-secondary: var(--brand-onyx);
+  --background-secondary-contrast: var(--brand-white);
   --background-neutral: var(--brand-grey);
   --nav-background: var(--brand-onyx);
+  --nav-foreground: var(--brand-white);
+  --nav-secondary-background: var(--brand-onyx);
+  --nav-secondary-foreground: var(--brand-white);
+  --link: var(--brand-custom-green);
   --text-dark: var(--brand-gray20);
   --text-grey: var(--brand-gray40);
   --text-light: var(--brand-white);
@@ -116,167 +123,6 @@
   --border-color: rgba(255, 255, 255, 0.1);
 }
 
-/*
- * Alternative brand. Activated by <html data-brand="alt"> via BrandProvider
- * in SiteShell when site.useAlternativeTheme === true. Overrides the same
- * semantic tokens so existing components automatically re-skin.
- *
- * Palette: #FFB997 peach, #F67E7D coral, #843B62 mauve, #0B032D deep indigo.
- */
-[data-brand="alt"] {
-  /* Raw alt palette */
-  --brand-alt-peach: #FFB997;
-  --brand-alt-coral: #F67E7D;
-  --brand-alt-mauve: #843B62;
-  --brand-alt-deep-indigo: #0B032D;
-  --brand-alt-surface: #1a0f3d;
-
-  /* Re-map semantic tokens */
-  --background: var(--brand-alt-peach);
-  --foreground: var(--brand-alt-deep-indigo);
-
-  --card: #fff5ee;
-  --card-foreground: var(--brand-alt-deep-indigo);
-  --popover: #fff5ee;
-  --popover-foreground: var(--brand-alt-deep-indigo);
-
-  --primary: var(--brand-alt-coral);
-  --primary-foreground: var(--brand-alt-deep-indigo);
-
-  --secondary: var(--brand-alt-mauve);
-  --secondary-foreground: var(--brand-alt-peach);
-
-  --muted: #fde2d3;
-  --muted-foreground: #6b3a52;
-
-  --accent: var(--brand-alt-peach);
-  --accent-foreground: var(--brand-alt-deep-indigo);
-
-  --border: rgba(11, 3, 45, 0.12);
-  --input: rgba(11, 3, 45, 0.18);
-  --ring: var(--brand-alt-coral);
-
-  /* Project semantic aliases */
-  --background-secondary: var(--brand-alt-deep-indigo);
-  --background-neutral: #fff5ee;
-  --nav-background: var(--brand-alt-deep-indigo);
-  --text-dark: var(--brand-alt-deep-indigo);
-  --text-grey: #6b3a52;
-  --text-light: var(--brand-alt-peach);
-  --primary-contrast: var(--brand-alt-deep-indigo);
-  --navigation-background-none: rgba(255, 185, 151, 0.08);
-  --navigation-hover-background: rgba(246, 126, 125, 0.12);
-  --border-color: rgba(11, 3, 45, 0.12);
-
-  --gradient-left: var(--brand-alt-coral);
-  --gradient-right: var(--brand-alt-peach);
-
-  /* Brand-* aliases used by default components — repoint to alt palette */
-  --brand-onyx: var(--brand-alt-deep-indigo);
-  --brand-mauve-shadow: var(--brand-alt-mauve);
-  --brand-lavender-blush: var(--brand-alt-peach);
-  --brand-lilac: var(--brand-alt-coral);
-  --brand-custom-green: var(--brand-alt-coral);
-  --brand-custom-purple: var(--brand-alt-mauve);
-  --brand-muted-teal: var(--brand-alt-coral);
-  --brand-grey: #fff5ee;
-}
-
-[data-brand="alt"],
-[data-brand="alt"] * {
-  font-family: "DM Sans", var(--font-sans);
-}
-
-[data-brand="alt"] h1,
-[data-brand="alt"] h2,
-[data-brand="alt"] h3,
-[data-brand="alt"] h4,
-[data-brand="alt"] h5,
-[data-brand="alt"] h6,
-[data-brand="alt"] .font-display {
-  font-family: "Space Grotesk", var(--font-display);
-}
-
-/*
- * Variant two brand. Activated by <html data-brand="variant2"> when
- * site.useAlternativeTheme === "Variant two". Palette from reference:
- * Pale Slate, Dim Grey, Shadow Grey, Metallic Gold, Honey Bronze.
- * Playfair Display + Source Sans 3.
- */
-[data-brand="variant2"] {
-  /* Raw variant2 palette */
-  --brand-v2-pale-slate: #BFBDC1;
-  --brand-v2-dim-grey: #6D6A75;
-  --brand-v2-shadow-grey: #37323E;
-  --brand-v2-metallic-gold: #DEB841;
-  --brand-v2-honey-bronze: #DE9E36;
-
-  /* Re-map semantic tokens */
-  --background: #ffffff;
-  --foreground: var(--brand-v2-shadow-grey);
-
-  --card: #ffffff;
-  --card-foreground: var(--brand-v2-shadow-grey);
-  --popover: #ffffff;
-  --popover-foreground: var(--brand-v2-shadow-grey);
-
-  --primary: var(--brand-v2-metallic-gold);
-  --primary-foreground: var(--brand-v2-shadow-grey);
-
-  --secondary: var(--brand-v2-dim-grey);
-  --secondary-foreground: var(--brand-v2-pale-slate);
-
-  --muted: #d4d2d6;
-  --muted-foreground: var(--brand-v2-dim-grey);
-
-  --accent: var(--brand-v2-honey-bronze);
-  --accent-foreground: var(--brand-v2-shadow-grey);
-
-  --border: rgba(55, 50, 62, 0.14);
-  --input: rgba(55, 50, 62, 0.2);
-  --ring: var(--brand-v2-metallic-gold);
-
-  /* Project semantic aliases */
-  --background-secondary: var(--brand-v2-shadow-grey);
-  --background-neutral: var(--brand-v2-pale-slate);
-  --nav-background: var(--brand-v2-shadow-grey);
-  --text-dark: var(--brand-v2-shadow-grey);
-  --text-grey: var(--brand-v2-dim-grey);
-  --text-light: var(--brand-v2-pale-slate);
-  --primary-contrast: var(--brand-v2-shadow-grey);
-  --navigation-background-none: rgba(55, 50, 62, 0.06);
-  --navigation-hover-background: rgba(222, 184, 65, 0.16);
-  --border-color: rgba(55, 50, 62, 0.14);
-
-  --gradient-left: var(--brand-v2-metallic-gold);
-  --gradient-right: var(--brand-v2-honey-bronze);
-
-  /* Brand-* aliases used by default components — repoint to variant2 palette */
-  --brand-onyx: var(--brand-v2-shadow-grey);
-  --brand-mauve-shadow: var(--brand-v2-shadow-grey);
-  --brand-lavender-blush: var(--brand-v2-pale-slate);
-  --brand-lilac: var(--brand-v2-metallic-gold);
-  --brand-custom-green: var(--brand-v2-metallic-gold);
-  --brand-custom-purple: var(--brand-v2-dim-grey);
-  --brand-muted-teal: var(--brand-v2-metallic-gold);
-  --brand-grey: var(--brand-v2-pale-slate);
-}
-
-[data-brand="variant2"],
-[data-brand="variant2"] * {
-  font-family: "Source Sans 3", var(--font-sans);
-}
-
-[data-brand="variant2"] h1,
-[data-brand="variant2"] h2,
-[data-brand="variant2"] h3,
-[data-brand="variant2"] h4,
-[data-brand="variant2"] h5,
-[data-brand="variant2"] h6,
-[data-brand="variant2"] .font-display {
-  font-family: "Playfair Display", var(--font-display);
-  letter-spacing: -0.015em;
-}
 
 @theme inline {
   --font-sans:
@@ -322,7 +168,14 @@
   --color-brand-gray40: var(--brand-gray40);
 
   /* Semantic Bricks aliases */
+  --color-background-primary: var(--background-primary);
+  --color-background-primary-contrast: var(--background-primary-contrast);
   --color-background-secondary: var(--background-secondary);
+  --color-background-secondary-contrast: var(--background-secondary-contrast);
+  --color-nav-foreground: var(--nav-foreground);
+  --color-nav-secondary-background: var(--nav-secondary-background);
+  --color-nav-secondary-foreground: var(--nav-secondary-foreground);
+  --color-link: var(--link);
   --color-background-neutral: var(--background-neutral);
   --color-nav-background: var(--nav-background);
   --color-text-dark: var(--text-dark);
@@ -396,7 +249,7 @@
     transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform;
   }
-  [data-brand="alt"] .card-link:hover .card-media img {
+  .card-link:hover .card-media img {
     transform: scale(1.06);
   }
 }
