@@ -121,7 +121,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { name: "twitter:card", content: "summary" },
         { name: "twitter:site", content: "@Lovable" },
       ],
-      links,
+      links: finalLinks,
     };
   },
   loader: async ({ context }) => {
