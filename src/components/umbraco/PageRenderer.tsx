@@ -36,6 +36,7 @@ export function PageRenderer({ page }: PageRendererProps) {
         }
         return null;
       })}
+      {isFeed ? <Feed feed={page} /> : null}
     </article>
   );
 }
