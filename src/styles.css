@@ -31,6 +31,12 @@
   /* Semantic tokens */
   --radius: 0.5rem;
 
+  /* Typography (overridden per-site by CMS `bodyFont` / `headingsFont`) */
+  --body-font:
+    "Fira Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --heading-font: "Fira Sans", ui-sans-serif, system-ui, sans-serif;
+
+
   --background: var(--brand-white);
   --foreground: var(--brand-gray20);
 
