@@ -2,6 +2,8 @@ import type { BlockItem, ContentItem, JsonObject, JsonValue } from "@/integratio
 
 import { BlockGridRenderer } from "./BlockGridRenderer";
 import { BlockListRenderer } from "./BlockListRenderer";
+import { Feed } from "./Feed";
+import { PostRenderer } from "./PostRenderer";
 
 interface PageRendererProps {
   page: ContentItem;
