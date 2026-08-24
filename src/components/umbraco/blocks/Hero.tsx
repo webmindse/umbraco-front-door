@@ -239,12 +239,10 @@ export default function Hero({ content, settings }: BlockComponentProps) {
               {hasToken ? (
                 <>
                   {headingParts[0]}
-                  <span
-                    key={currentWord}
-                    className="inline-block animate-in fade-in slide-in-from-bottom-2 duration-500 text-primary"
-                  >
-                    {currentWord}
-                  </span>
+                  <WordCarousel
+                    words={animatedWords ?? []}
+                    className="text-primary"
+                  />
                   {headingParts[1]}
                 </>
               ) : (
