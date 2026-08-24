@@ -126,7 +126,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   },
   loader: async ({ context }) => {
     const site = await (getSite as unknown as SiteFetcher)({ data: { culture: "sv" } });
-    await context.queryClient.prefetchQuery(siteQueryOptions("sv"));
+    await context.queryClient.prefetchQuery(siteQueryOptions("sv", { path: "/" }));
     return { favicon: extractFavicon(site) } satisfies RootLoaderData;
   },
   shellComponent: RootShell,

@@ -53,6 +53,36 @@ export const getChildren = createServerFn({ method: "GET" })
 const cultureInput = z.object({ culture: z.string().optional() });
 
 /**
+ * Resolve the root `site` node that owns a given URL path. The CMS can hold
+ * several roots; every content response carries `route.startItem.id`, which
+ * identifies its own root. Falls back to the default start item.
+ */
+export const getSiteForPath = createServerFn({ method: "GET" })
+  .inputValidator((data: unknown) =>
+    z
+      .object({ path: z.string().default("/"), culture: z.string().optional() })
+      .parse(data ?? {}),
+  )
+  .handler(async ({ data }): Promise<ContentItem> => {
+    const path = data.path.startsWith("/") ? data.path : `/${data.path}`;
+    try {
+      const item = await umbracoFetch<ContentItem>(`/content/item${path}`, {
+        culture: data.culture,
+      });
+      const rootId = item.route?.startItem?.id;
+      if (rootId) {
+        if (item.contentType === "site" && item.id === rootId) return item;
+        return await umbracoFetch<ContentItem>(`/content/item/${rootId}`, {
+          culture: data.culture,
+        });
+      }
+    } catch {
+      // fall through to the default root below
+    }
+    return umbracoFetch<ContentItem>("/content/item/", { culture: data.culture });
+  });
+
+/**
  * Fetch the site/home node for a given culture. The `site` document is the
  * start item and carries global header/footer config + a `cultures` map for
  * the language picker.

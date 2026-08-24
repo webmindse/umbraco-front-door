@@ -8,6 +8,8 @@ import { PageRenderer } from "@/components/umbraco/PageRenderer";
 import { getContentByRoute } from "@/lib/umbraco.functions";
 import type { ContentItem } from "@/integrations/umbraco/types";
 import { reportLovableError } from "@/lib/lovable-error-reporting";
+import { extractFaviconUrl, siteQueryOptions } from "@/components/site/site-data";
+import { inferCultureFromPath } from "@/lib/culture";
 
 type PageFetcher = (args: { data: { path: string } }) => Promise<ContentItem | null>;
 
@@ -24,12 +26,17 @@ function pageQueryOptions(path: string, fetcher: PageFetcher) {
 
 export const Route = createFileRoute("/$")({
   head: ({ loaderData }) => {
-    const name = (loaderData as ContentItem | undefined)?.name ?? "Bricks";
+    const data = loaderData as { page?: ContentItem; favicon?: string | null } | undefined;
+    const name = data?.page?.name ?? "Bricks";
+    const links = data?.favicon
+      ? [{ rel: "icon", href: data.favicon }]
+      : [];
     return {
       meta: [
         { title: name },
         { name: "description", content: `${name} — Bricks` },
       ],
+      links,
     };
   },
   loader: async ({ context, params }) => {
@@ -39,7 +46,12 @@ export const Route = createFileRoute("/$")({
     await context.queryClient.prefetchQuery(
       pageQueryOptions(path, getContentByRoute as unknown as PageFetcher),
     );
-    return data;
+    const culture = inferCultureFromPath(data.route?.path ?? path);
+    const siteId = data.route?.startItem?.id ?? null;
+    const site = await context.queryClient
+      .ensureQueryData(siteQueryOptions(culture, { siteId, path }))
+      .catch(() => null);
+    return { page: data, favicon: extractFaviconUrl(site) };
   },
   component: CatchAllPage,
   notFoundComponent: PageNotFound,
