@@ -11,6 +11,11 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { getSite } from "@/lib/umbraco.functions";
+import { resolveUmbracoMediaUrl } from "@/components/umbraco/UmbracoImage";
+import { siteQueryOptions } from "@/components/site/site-data";
+import type { ContentItem } from "@/integrations/umbraco/types";
+import type { Culture } from "@/lib/culture";
 
 function NotFoundComponent() {
   return (
