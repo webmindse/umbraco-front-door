@@ -52,7 +52,7 @@ function bgClass(color: string | null | undefined) {
   }
 }
 
-function PostCard({ post, culture }: { post: ContentItem; culture: Culture }) {
+export function PostCard({ post, culture }: { post: ContentItem; culture: Culture }) {
   const p = (post.properties ?? {}) as unknown as PostProps;
   const media = p.listingImage?.[0];
   const dateLabel = formatDate(p.date, culture);

@@ -9,6 +9,7 @@ import Counters from "./Counters";
 import DownloadList from "./DownloadList";
 import Hero from "./Hero";
 import ImageBlock from "./ImageBlock";
+import LatestFromFeed from "./LatestFromFeed";
 import Quote from "./Quote";
 import Text from "./Text";
 import TextAndMedia from "./TextAndMedia";
@@ -45,6 +46,7 @@ export const blockRegistry: Record<string, BlockComponent> = {
   counters: Counters as BlockComponent,
   video: Video as BlockComponent,
   downloadList: DownloadList as BlockComponent,
+  latestFromFeed: LatestFromFeed as BlockComponent,
 };
 
 /**
