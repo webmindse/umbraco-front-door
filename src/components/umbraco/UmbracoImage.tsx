@@ -59,14 +59,40 @@ export function UmbracoImage({
     return qs ? `${base}${base.includes("?") ? "&" : "?"}${qs}` : base;
   }, [media, width, height]);
 
+  // Compute intrinsic width/height attributes for the rendered image so the
+  // aspect ratio matches the requested constraint (and the resized src). When
+  // only one dimension is requested, derive the other from the media's aspect
+  // ratio so the image is not squashed by stale original-media dimensions.
+  const aspectRatio = useMemo(() => {
+    if (!media?.width || !media?.height) return null;
+    return media.width / media.height;
+  }, [media]);
+
+  const { intrinsicWidth, intrinsicHeight } = useMemo(() => {
+    if (!media) return { intrinsicWidth: undefined, intrinsicHeight: undefined };
+    if (width && height) {
+      return { intrinsicWidth: width, intrinsicHeight: height };
+    }
+    if (width && aspectRatio) {
+      return { intrinsicWidth: width, intrinsicHeight: Math.round(width / aspectRatio) };
+    }
+    if (height && aspectRatio) {
+      return { intrinsicWidth: Math.round(height * aspectRatio), intrinsicHeight: height };
+    }
+    return {
+      intrinsicWidth: media.width ?? undefined,
+      intrinsicHeight: media.height ?? undefined,
+    };
+  }, [media, width, height, aspectRatio]);
+
   if (!media || !src) return null;
 
   return (
     <img
       src={src}
       alt={alt ?? media.name ?? ""}
-      width={width ?? media.width ?? undefined}
-      height={height ?? media.height ?? undefined}
+      width={intrinsicWidth}
+      height={intrinsicHeight}
       loading={loading}
       sizes={sizes}
       className={
