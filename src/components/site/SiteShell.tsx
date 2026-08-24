@@ -30,11 +30,22 @@ function getCultureFallbackRoutes(site: ContentItem): Record<Culture, string> {
 
 export function SiteShell({ children, currentPage }: SiteShellProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const culture: Culture = inferCultureFromPath(pathname);
+  const culture: Culture = inferCultureFromPath(
+    currentPage?.route?.path ?? pathname,
+  );
   const other = otherCulture(culture);
 
-  const { data: site } = useSuspenseQuery(siteQueryOptions(culture));
-  const { data: otherSiteData } = useSuspenseQuery(siteQueryOptions(other));
+  // Multi-root: the page tells us which `site` node owns it. Without a page
+  // (404/error shells) we resolve the root from the URL path instead.
+  const source = {
+    siteId: currentPage?.route?.startItem?.id ?? null,
+    path: pathname,
+  };
+
+  const { data: site } = useSuspenseQuery(siteQueryOptions(culture, source));
+  const { data: otherSiteData } = useSuspenseQuery(
+    siteQueryOptions(other, { siteId: site.id }),
+  );
   const { data: navResp } = useSuspenseQuery(navQueryOptions(culture, site.id));
 
   const fallbackRoutes = getCultureFallbackRoutes(site);
