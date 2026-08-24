@@ -1,84 +1,42 @@
-## Goal
+# Multi-site support: respect each root node's own settings
 
-Add a second, fully separated brand (theme + components) that activates when the Umbraco site setting `useAlternativeTheme` is true. The current ("default") brand stays untouched. Content structure, blocks, routing, and data layer remain shared.
+## The problem
 
-## Approach: themed tokens + per-brand block variants
+The CMS can hold several root nodes of type `site` (e.g. the main site at `/` and "Sista Varvet" at `/sista-varvet/`). Today the frontend always loads **one** site node — the default root — and uses it for colours, logo, favicon, navigation, footer and the language picker. So pages under `/sista-varvet/` render with the main site's branding instead of their own (in this case Sista Varvet has all colour fields empty, which should fall back to the CSS defaults, not inherit the other site's palette).
 
-- One CSS file per brand defining tokens (colors, fonts, radii, shadows, spacing scale tweaks).
-- One set of "shell" components per brand (SiteHeader, SiteFooter, page wrappers).
-- One block registry per brand. Blocks that look the same can be shared; blocks that need different layout/composition get a brand-specific variant.
-- A `BrandProvider` reads `site.properties.useAlternativeTheme`, sets `data-brand="default" | "alt"` on `<html>`, and exposes the active brand via context so the block dispatcher picks the right registry.
+Confirmed in code:
+- `getSite` calls `/content/item/` with only a culture — that always resolves the default start item.
+- `SiteShell` calls `siteQueryOptions(culture)`, so header, footer, theme, nav root and breadcrumbs all come from that single node.
+- `__root.tsx` hardcodes `getSite({ culture: "sv" })` for the favicon.
 
-## Folder layout
+## What changes
 
-```text
-src/
-  brands/
-    index.ts                 // BrandProvider, useBrand, brand types
-    default/
-      theme.css              // current tokens (extracted from src/styles.css)
-      fonts.ts               // link tags for Fira Sans
-      shell/
-        SiteHeader.tsx       // moved from src/components/site/
-        SiteFooter.tsx
-      blocks/
-        registry.ts          // current registry
-        // brand-specific overrides live here; shared blocks re-export
-    alt/
-      theme.css              // new tokens: #FFB997 #F67E7D #843B62 #0B032D, Space Grotesk/DM Sans
-      fonts.ts               // link tags for Space Grotesk + DM Sans
-      shell/
-        SiteHeader.tsx       // alt layout
-        SiteFooter.tsx
-      blocks/
-        registry.ts          // alt registry
-        Hero.tsx, Cards.tsx, ... // alt variants where they need to differ
-  components/
-    umbraco/
-      blocks/_shared/        // blocks that are identical across brands (start here)
-      BlockListRenderer.tsx  // reads registry from useBrand()
-      BlockGridRenderer.tsx
-  styles.css                 // imports tailwindcss + both brand themes scoped by [data-brand]
-```
+1. **Resolve the site from the current page, not from a global default.**
+   Every content response carries `route.startItem.id` — the id of its own root node. `SiteShell` will resolve the site by that id (via the existing `getContentById`), so `/sista-varvet/sv/press/` loads the Sista Varvet site node.
 
-Existing `src/components/site/*` and `src/components/umbraco/blocks/*` move into `brands/default/`. The shared renderers (`BlockListRenderer`, `BlockGridRenderer`, `PageRenderer`, `RichTextRenderer`, `UmbracoImage`, `UmbracoLink`) stay in `src/components/umbraco/` — they are brand-agnostic plumbing.
+2. **Culture detection becomes root-aware.**
+   Today culture is "path starts with `/en`". Sista Varvet uses `/sista-varvet/sv/` and `/sista-varvet/en/`. Culture will be read from the resolved page's `cultures` map / route path segment instead of a hardcoded prefix, with `sv` as default.
 
-## Theme switching mechanics
+3. **Language picker uses the current site's own cultures.**
+   The "other language" node becomes the same root node fetched in the other culture, and the fallback links come from that node's `cultures` map (`/sista-varvet/en/`), not the main site's.
 
-`src/styles.css` keeps `@import "tailwindcss"` and `@theme inline` mappings, but the raw token values move to two scoped blocks:
+4. **Navigation, footer, breadcrumbs follow automatically** once the resolved site id is passed to `navQueryOptions` and the resolved site object to `SiteFooter` / `Breadcrumbs`.
 
-```css
-[data-brand="default"] { --brand-onyx: #141115; /* …current palette… */ }
-[data-brand="alt"]     { --brand-bg: #0B032D; --brand-accent: #F67E7D; /* …alt palette… */ --font-sans: "Space Grotesk", …; --font-body: "DM Sans", …; }
-```
+5. **Theme falls back cleanly.** `SiteThemeStyle` already skips null/empty colour values, so a site with no colours defined renders with the stylesheet defaults — no bleed from another root.
 
-`@theme inline` keeps referencing `var(--…)`, so every `bg-primary`, `text-foreground`, etc. flips automatically when `data-brand` changes — no component edits required for token-driven styling.
+6. **Favicon per site.** The root route's global favicon fetch is replaced by a favicon resolved from the site node that the current page belongs to, with the default root as fallback for pages that fail to resolve.
 
-Fonts: the root route's `head()` conditionally adds the right Google Fonts `<link>` based on the active brand (or just loads both — small cost, simpler). Per stack rules, no `@import` of font URLs in CSS.
+7. **Pages with no content (404 / error states).** `SiteShell` is also rendered without a current page. In that case the site is resolved by walking the URL's first path segment against the CMS, falling back to the default root node if nothing matches.
 
-## BrandProvider + dispatcher
+## Technical notes
 
-- `useBrand()` returns `'default' | 'alt'`, derived from `site.properties.useAlternativeTheme` resolved in `SiteShell` (which already has `site`).
-- `SiteShell` writes `data-brand` to `document.documentElement` in an effect, and renders the brand-specific `<SiteHeader>` / `<SiteFooter>`.
-- `BlockListRenderer` / `BlockGridRenderer` call `useBrand()` and look up the registry from `brands/<brand>/blocks/registry.ts`. Each registry can re-export shared block components or supply its own.
-
-## Alt brand visual direction
-
-- Palette: bg `#0B032D` (deep indigo near-black), surface `#1a0f3d`, accent `#F67E7D` (coral), highlight `#FFB997` (peach), text-on-dark `#FFB997`/white, mauve `#843B62` for secondary surfaces.
-- Type: Space Grotesk for display/headings, DM Sans for body. Tighter tracking on headings, looser leading on body.
-- Feel: editorial-modern, dark-mode-first, larger radii (`--radius: 1rem`), softer shadows with coral glow, more generous section padding than default.
-- Shell: alt `SiteHeader` is dark indigo with coral underline accents; alt `SiteFooter` keeps the same data shape but in indigo/peach.
-
-## Build phases
-
-1. **Scaffold brand split**: create `src/brands/{default,alt}/`, move existing header/footer/blocks into `default/`, update imports, no visual change.
-2. **Tokens + provider**: split `styles.css` into `data-brand`-scoped blocks, add `BrandProvider`/`useBrand`, wire `SiteShell` to set `data-brand` and pick the right shell, make `BlockListRenderer`/`BlockGridRenderer` brand-aware. Verify default brand looks identical.
-3. **Alt theme**: write `brands/alt/theme.css` with the chosen palette + fonts, alt `SiteHeader`/`SiteFooter`, and alt block variants for Hero, Cards, TextAndMedia, Quote, Counters (others initially re-export default). Toggle `useAlternativeTheme` in CMS and verify.
-
-Review checkpoint after each phase.
+- New/changed server functions in `src/lib/umbraco.functions.ts`: a `getSiteForPath`-style helper that resolves a root node from a path (or id) and culture; `getSite` stays for the default-root fallback.
+- `src/components/site/site-data.ts`: `siteQueryOptions` keyed by `[culture, siteId]` instead of culture alone, so different roots are cached separately.
+- `src/components/site/SiteShell.tsx`: derive `siteId` from `currentPage.route.startItem.id`, derive culture from the page route, then feed header/footer/theme/nav/breadcrumbs from the resolved node.
+- `src/lib/culture.ts`: `inferCultureFromPath` handles a culture segment anywhere directly under a root path, not just a leading `/en`.
+- `src/routes/__root.tsx`: favicon loader keeps the default-root fetch as fallback; the leaf routes supply the per-site favicon.
+- No block components change.
 
 ## Out of scope
 
-- Changing content models, block aliases, routing, navigation data, or any business logic.
-- Per-brand copy/content — the CMS content is the same.
-- Dark-mode toggle behavior (separate concern from brand).
+Cross-site navigation (a menu listing all root sites) — the header keeps showing only the current site's tree.
