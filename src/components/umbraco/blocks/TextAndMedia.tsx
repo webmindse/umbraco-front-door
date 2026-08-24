@@ -244,10 +244,12 @@ export default function TextAndMedia({ content, settings }: BlockComponentProps)
 
   const caption = useVideo ? videoCaption : imageCaption;
   const mediaWithCaption = mediaNode ? (
-    <figure className="m-0">
+    <figure className="relative m-0">
       {mediaNode}
       {caption ? (
-        <figcaption className="mt-2 text-sm text-muted-foreground">{caption}</figcaption>
+        <figcaption className="absolute bottom-4 right-4 z-10 max-w-[80%] rounded-md bg-background/60 px-4 py-2 text-sm italic text-foreground backdrop-blur-md">
+          {caption}
+        </figcaption>
       ) : null}
     </figure>
   ) : null;
