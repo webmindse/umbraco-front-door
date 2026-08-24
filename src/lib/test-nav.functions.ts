@@ -18,8 +18,10 @@ export const testNavFetch = createServerFn({ method: "GET" })
       params.set("filter", "contentType:page");
     } else if (data.mode === "descendants-feed") {
       params.set("fetch", `descendants:${data.rootId}`);
-      params.append("filter", "contentType:page");
-      params.append("filter", "contentType:feed");
+      params.set("filter", "contentType:page,feed");
+    } else if (data.mode === "descendants-feed-or") {
+      params.set("fetch", `descendants:${data.rootId}`);
+      params.set("filter", "contentType:page|feed");
     } else if (data.mode === "descendants-no-filter") {
       params.set("fetch", `descendants:${data.rootId}`);
     }
