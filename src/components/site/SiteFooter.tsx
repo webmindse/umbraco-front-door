@@ -72,7 +72,7 @@ export function SiteFooter({ site }: SiteFooterProps) {
                 media={footerLogo}
                 alt={site.name}
                 height={48}
-                className="h-12 w-auto"
+                className="h-12 w-auto self-start object-contain"
               />
             ) : null}
             {copyright ? (
