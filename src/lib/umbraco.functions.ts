@@ -94,8 +94,8 @@ export const getSite = createServerFn({ method: "GET" })
   );
 
 /**
- * Fetch all descendants of the site as a flat list, filtered to `page` docs.
- * Header nav and mobile drill-down are built from this single response.
+ * Fetch all descendants of the site as a flat list, filtered to `page` and
+ * `feed` docs. Header nav and mobile drill-down are built from this response.
  */
 export const getNavigationDescendants = createServerFn({ method: "GET" })
   .inputValidator((data: unknown) =>
@@ -104,7 +104,8 @@ export const getNavigationDescendants = createServerFn({ method: "GET" })
   .handler(({ data }) => {
     const params = new URLSearchParams();
     params.set("fetch", `descendants:${data.rootId}`);
-    params.set("filter", "contentType:page");
+    params.append("filter", "contentType:page");
+    params.append("filter", "contentType:feed");
     params.set("take", "200");
     return umbracoFetch<ContentResponse>(`/content?${params.toString()}`, {
       culture: data.culture,
