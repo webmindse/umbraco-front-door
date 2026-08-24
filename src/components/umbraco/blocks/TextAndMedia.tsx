@@ -338,14 +338,26 @@ export default function TextAndMedia({ content, settings }: BlockComponentProps)
       <div className={containerClass}>
         <div
           className={cn(
-            "grid grid-cols-1 gap-8 md:grid-cols-2 md:items-center",
+            "grid grid-cols-1 gap-0 md:grid-cols-2 md:items-stretch",
             innerClass,
           )}
         >
-          <div className={cn(mediaFirst ? "md:order-1" : "md:order-2")}>
+          <div
+            className={cn(
+              "[&_figure]:h-full [&_img]:h-full [&_img]:w-full [&_img]:object-cover",
+              mediaFirst ? "md:order-1" : "md:order-2",
+            )}
+          >
             {mediaWithCaption}
           </div>
-          <div className={cn(mediaFirst ? "md:order-2" : "md:order-1")}>{textNode}</div>
+          <div
+            className={cn(
+              "flex items-center p-6 md:p-12",
+              mediaFirst ? "md:order-2" : "md:order-1",
+            )}
+          >
+            <div className="w-full">{textNode}</div>
+          </div>
         </div>
       </div>
     </section>
