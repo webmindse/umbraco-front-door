@@ -62,30 +62,35 @@ export function SiteHeader({
 
   return (
     <header className="sticky top-0 z-40 w-full bg-nav-background text-nav-foreground">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <Link to={fallbackRoutes[culture]} className="flex items-center" aria-label={site.name}>
+      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 px-4 sm:px-6 lg:px-8">
+        <Link
+          to={fallbackRoutes[culture]}
+          className="flex shrink-0 items-center"
+          aria-label={site.name}
+        >
           {logo ? (
             <UmbracoImage
               media={logo}
               alt={logoAlt ?? site.name}
               height={36}
-              className="h-9 w-auto"
+              className="h-9 w-auto max-w-[180px] object-contain"
             />
           ) : (
             <span className="text-lg font-semibold tracking-tight">{site.name}</span>
           )}
         </Link>
 
-        <nav aria-label="Primary" className="hidden md:flex">
-          <ul className="flex items-center gap-8 text-sm font-medium uppercase tracking-wider">
+        <nav aria-label="Primary" className="hidden min-w-0 lg:flex lg:justify-center">
+          <ul className="flex min-w-0 items-center gap-6 text-[0.95rem] font-medium tracking-normal xl:gap-8">
             {nav.map((node) => (
               <DesktopNavItem key={node.id} node={node} />
             ))}
           </ul>
         </nav>
 
-        <div className="flex items-center gap-2">
-          <div className="hidden md:block">
+        <div className="flex shrink-0 items-center justify-end gap-2">
+          <div className="hidden lg:block">
+
             <LanguagePicker
               culture={culture}
               currentFlag={currentFlag}

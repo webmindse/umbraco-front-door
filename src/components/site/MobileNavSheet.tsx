@@ -44,7 +44,7 @@ export function MobileNavSheet({
         <button
           type="button"
           aria-label="Open menu"
-          className="md:hidden inline-flex h-10 w-10 items-center justify-center rounded text-nav-foreground"
+          className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded text-nav-foreground"
         >
           <Menu className="h-6 w-6" />
         </button>
