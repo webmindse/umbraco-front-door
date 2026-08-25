@@ -125,10 +125,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     };
   },
   loader: async ({ context }) => {
-    const site = await (getSite as unknown as SiteFetcher)({ data: { culture: "sv" } });
-    await context.queryClient.prefetchQuery(siteQueryOptions("sv", { path: "/" }));
-    return { favicon: extractFavicon(site) } satisfies RootLoaderData;
+    // The CMS can be temporarily unavailable (e.g. Umbraco Cloud upgrades).
+    // Never let that take the whole app down with a 500 / blank screen.
+    try {
+      const site = await (getSite as unknown as SiteFetcher)({ data: { culture: "sv" } });
+      await context.queryClient.prefetchQuery(siteQueryOptions("sv", { path: "/" }));
+      return { favicon: extractFavicon(site) } satisfies RootLoaderData;
+    } catch (error) {
+      console.error("[__root] failed to load site settings", error);
+      return { favicon: null } satisfies RootLoaderData;
+    }
   },
+
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
