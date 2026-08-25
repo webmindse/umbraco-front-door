@@ -62,24 +62,6 @@ export function SiteHeader({
 
   return (
     <header className="sticky top-0 z-40 w-full bg-nav-background text-nav-foreground">
-      {/* Tier 1 — utility strip */}
-      <div className="hidden border-b border-current/10 lg:block">
-        <div className="mx-auto flex h-9 max-w-7xl items-center justify-end gap-4 px-4 sm:px-6 lg:px-8">
-          <LanguagePicker
-            culture={culture}
-            currentFlag={currentFlag}
-            currentFlagAlt={currentFlagAlt}
-            currentLanguageName={currentLanguageName}
-            otherFlag={otherFlag}
-            otherFlagAlt={otherFlagAlt}
-            otherLanguageName={otherLanguageName}
-            cultureRoutes={getCultureRoutes(currentPage)}
-            fallbackRoutes={fallbackRoutes}
-          />
-        </div>
-      </div>
-
-      {/* Tier 2 — logo + primary navigation */}
       <div className="relative">
         <div className="mx-auto grid h-16 max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-6 px-4 sm:px-6 lg:h-20 lg:grid-cols-[auto_minmax(0,1fr)] lg:px-8">
           <Link
@@ -99,12 +81,26 @@ export function SiteHeader({
             )}
           </Link>
 
-          <nav aria-label="Primary" className="hidden min-w-0 lg:flex lg:justify-end">
+          <nav
+            aria-label="Primary"
+            className="hidden min-w-0 items-center justify-end gap-6 lg:flex xl:gap-9"
+          >
             <ul className="flex min-w-0 items-center gap-6 text-[0.95rem] font-medium tracking-normal xl:gap-9">
               {nav.map((node) => (
                 <DesktopNavItem key={node.id} node={node} />
               ))}
             </ul>
+            <LanguagePicker
+              culture={culture}
+              currentFlag={currentFlag}
+              currentFlagAlt={currentFlagAlt}
+              currentLanguageName={currentLanguageName}
+              otherFlag={otherFlag}
+              otherFlagAlt={otherFlagAlt}
+              otherLanguageName={otherLanguageName}
+              cultureRoutes={getCultureRoutes(currentPage)}
+              fallbackRoutes={fallbackRoutes}
+            />
           </nav>
 
           <div className="col-start-3 flex shrink-0 items-center justify-end gap-2 lg:hidden">
