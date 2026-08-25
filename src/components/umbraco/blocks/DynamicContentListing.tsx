@@ -118,6 +118,7 @@ function ListingCard({
 }) {
   const p = (item.properties ?? {}) as unknown as ListingPageProps;
   const media = p.listingForDynamicContentImage?.[0];
+  const tags = (p.listingForDynamicContentTags ?? []).filter((t) => t?.name);
   const href = item.route?.path ?? "/";
 
   return (
@@ -145,6 +146,18 @@ function ListingCard({
         </div>
       ) : null}
       <div className="flex flex-1 flex-col p-6 md:p-8">
+        {tags.length ? (
+          <ul className="mb-3 flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <li
+                key={tag.id ?? tag.name}
+                className="border border-foreground/20 px-2.5 py-1 text-[0.6875rem] font-medium uppercase tracking-wide text-muted-foreground"
+              >
+                {tag.name}
+              </li>
+            ))}
+          </ul>
+        ) : null}
         <h3 className="font-display text-2xl tracking-tight">{item.name}</h3>
         {p.listingForDynamicContentShortDescription ? (
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
