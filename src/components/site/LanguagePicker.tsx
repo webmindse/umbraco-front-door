@@ -66,7 +66,7 @@ export function LanguagePicker({
       <button
         type="button"
         onClick={goOther}
-        className="flex w-full items-center gap-3 rounded px-2 py-3 text-left"
+        className="flex w-full cursor-pointer items-center gap-3 rounded px-2 py-3 text-left"
         aria-label={otherFlagAlt ?? `Switch to ${otherLanguageName ?? target}`}
       >
         {otherFlag ? (
@@ -118,7 +118,7 @@ export function LanguagePicker({
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label="Select language"
-        className="inline-flex h-9 w-9 items-center justify-center rounded-full text-nav-foreground/60 transition-colors hover:text-nav-foreground"
+        className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-nav-foreground/60 transition-colors hover:text-nav-foreground"
       >
         <Globe className="h-5 w-5" aria-hidden="true" />
       </button>
@@ -135,7 +135,7 @@ export function LanguagePicker({
                 type="button"
                 onClick={r.onClick}
                 data-current={r.current ? "true" : "false"}
-                className="flex w-full items-center gap-3 rounded px-2 py-2 text-left text-sm text-nav-secondary-foreground/70 transition-colors hover:text-nav-secondary-foreground data-[current=true]:font-semibold data-[current=true]:text-nav-secondary-foreground"
+                className="flex w-full cursor-pointer items-center gap-3 rounded px-2 py-2 text-left text-sm text-nav-secondary-foreground/70 transition-colors hover:text-nav-secondary-foreground data-[current=true]:font-semibold data-[current=true]:text-nav-secondary-foreground"
               >
                 {r.flag ? (
                   <UmbracoImage
