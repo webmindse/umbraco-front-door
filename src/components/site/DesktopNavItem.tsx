@@ -51,10 +51,11 @@ export function DesktopNavItem({ node, depth = 0 }: DesktopNavItemProps) {
         <Link
           to={node.path}
           data-active={isActive ? "true" : "false"}
-          className="flex-1 px-5 py-2.5 text-sm font-medium normal-case tracking-normal text-nav-secondary-foreground/90 hover:bg-white/5 hover:text-nav-secondary-foreground"
+          className="flex-1 px-5 py-2.5 text-sm font-medium normal-case tracking-normal text-nav-secondary-foreground/90 hover:bg-nav-hover hover:text-nav-secondary-foreground"
         >
           {node.name}
         </Link>
+
         {hasChildren ? (
           <span className="flex items-center pr-4 text-nav-secondary-foreground/60">
             <ChevronRight className="h-4 w-4" aria-hidden="true" />

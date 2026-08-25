@@ -75,6 +75,9 @@
   --nav-foreground: var(--brand-white);
   --nav-secondary-background: var(--brand-onyx);
   --nav-secondary-foreground: var(--brand-white);
+  /* Hover wash derived from the CMS nav colours so it works on any palette */
+  --nav-hover: color-mix(in oklab, var(--nav-secondary-foreground) 12%, transparent);
+
   --link: var(--brand-custom-green);
   --text-dark: var(--brand-gray20);
   --text-grey: var(--brand-gray40);
