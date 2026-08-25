@@ -7,6 +7,7 @@ import Card from "./Card";
 import Cards from "./Cards";
 import Counters from "./Counters";
 import DownloadList from "./DownloadList";
+import DynamicContentListing from "./DynamicContentListing";
 import Hero from "./Hero";
 import ImageBlock from "./ImageBlock";
 import LatestFromFeed from "./LatestFromFeed";
@@ -47,6 +48,7 @@ export const blockRegistry: Record<string, BlockComponent> = {
   video: Video as BlockComponent,
   downloadList: DownloadList as BlockComponent,
   latestFromFeed: LatestFromFeed as BlockComponent,
+  dynamicContentListing: DynamicContentListing as BlockComponent,
 };
 
 /**
