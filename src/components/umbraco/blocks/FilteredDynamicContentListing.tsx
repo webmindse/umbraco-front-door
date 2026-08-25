@@ -23,7 +23,6 @@ import {
   parseSortOrder,
   sortListingItems,
   sourceChildrenQueryOptions,
-  tagIds,
   type SortDir,
   type SortKey,
   type TagRef,
@@ -570,6 +569,3 @@ export default function FilteredDynamicContentListing({
     </section>
   );
 }
-
-// Keeps `tagIds` re-exported for consumers importing from this module.
-export { tagIds };
