@@ -151,7 +151,7 @@ function ListingCard({
             {p.listingForDynamicContentShortDescription}
           </p>
         ) : null}
-        <div className="mt-8 flex">
+        <div className="mt-auto flex">
           <span className="inline-flex items-center border border-border px-6 py-3 text-sm transition group-hover:bg-muted">
             {buttonText}
           </span>
