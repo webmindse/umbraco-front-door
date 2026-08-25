@@ -152,9 +152,9 @@ function ListingCard({
           </p>
         ) : null}
         <div className="mt-auto flex pt-6">
-          <span className="inline-flex items-center border border-foreground/70 px-6 py-3 text-sm transition group-hover:bg-muted">
-            {buttonText}
-          </span>
+          <Button type="button" variant="outline" asChild size="default">
+            <span>{buttonText}</span>
+          </Button>
         </div>
       </div>
     </Link>
