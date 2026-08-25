@@ -183,8 +183,10 @@
   --color-nav-foreground: var(--nav-foreground);
   --color-nav-secondary-background: var(--nav-secondary-background);
   --color-nav-secondary-foreground: var(--nav-secondary-foreground);
+  --color-nav-hover: var(--nav-hover);
   --color-link: var(--link);
   --color-background-neutral: var(--background-neutral);
+
   --color-nav-background: var(--nav-background);
   --color-text-dark: var(--text-dark);
   --color-text-grey: var(--text-grey);
