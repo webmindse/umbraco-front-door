@@ -62,62 +62,69 @@ export function SiteHeader({
 
   return (
     <header className="sticky top-0 z-40 w-full bg-nav-background text-nav-foreground">
-      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 px-4 sm:px-6 lg:px-8">
-        <Link
-          to={fallbackRoutes[culture]}
-          className="flex shrink-0 items-center"
-          aria-label={site.name}
-        >
-          {logo ? (
-            <UmbracoImage
-              media={logo}
-              alt={logoAlt ?? site.name}
-              height={36}
-              className="h-9 w-auto max-w-[180px] object-contain"
-            />
-          ) : (
-            <span className="text-lg font-semibold tracking-tight">{site.name}</span>
-          )}
-        </Link>
+      {/* Tier 1 — utility strip */}
+      <div className="hidden border-b border-current/10 lg:block">
+        <div className="mx-auto flex h-9 max-w-7xl items-center justify-end gap-4 px-4 sm:px-6 lg:px-8">
+          <LanguagePicker
+            culture={culture}
+            currentFlag={currentFlag}
+            currentFlagAlt={currentFlagAlt}
+            currentLanguageName={currentLanguageName}
+            otherFlag={otherFlag}
+            otherFlagAlt={otherFlagAlt}
+            otherLanguageName={otherLanguageName}
+            cultureRoutes={getCultureRoutes(currentPage)}
+            fallbackRoutes={fallbackRoutes}
+          />
+        </div>
+      </div>
 
-        <nav aria-label="Primary" className="hidden min-w-0 lg:flex lg:justify-center">
-          <ul className="flex min-w-0 items-center gap-6 text-[0.95rem] font-medium tracking-normal xl:gap-8">
-            {nav.map((node) => (
-              <DesktopNavItem key={node.id} node={node} />
-            ))}
-          </ul>
-        </nav>
+      {/* Tier 2 — logo + primary navigation */}
+      <div className="relative">
+        <div className="mx-auto grid h-16 max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-6 px-4 sm:px-6 lg:h-20 lg:grid-cols-[auto_minmax(0,1fr)] lg:px-8">
+          <Link
+            to={fallbackRoutes[culture]}
+            className="flex shrink-0 items-center"
+            aria-label={site.name}
+          >
+            {logo ? (
+              <UmbracoImage
+                media={logo}
+                alt={logoAlt ?? site.name}
+                height={40}
+                className="h-9 w-auto max-w-[180px] object-contain lg:h-10"
+              />
+            ) : (
+              <span className="text-lg font-semibold tracking-tight">{site.name}</span>
+            )}
+          </Link>
 
-        <div className="flex shrink-0 items-center justify-end gap-2">
-          <div className="hidden lg:block">
+          <nav aria-label="Primary" className="hidden min-w-0 lg:flex lg:justify-end">
+            <ul className="flex min-w-0 items-center gap-6 text-[0.95rem] font-medium tracking-normal xl:gap-9">
+              {nav.map((node) => (
+                <DesktopNavItem key={node.id} node={node} />
+              ))}
+            </ul>
+          </nav>
 
-            <LanguagePicker
-              culture={culture}
-              currentFlag={currentFlag}
-              currentFlagAlt={currentFlagAlt}
-              currentLanguageName={currentLanguageName}
-              otherFlag={otherFlag}
-              otherFlagAlt={otherFlagAlt}
-              otherLanguageName={otherLanguageName}
-              cultureRoutes={getCultureRoutes(currentPage)}
-              fallbackRoutes={fallbackRoutes}
+          <div className="col-start-3 flex shrink-0 items-center justify-end gap-2 lg:hidden">
+            <MobileNavSheet
+              nav={nav}
+              logo={getMedia(props.logoOnLight)}
+              logoAlt={logoAlt}
+              language={{
+                culture,
+                otherFlag,
+                otherFlagAlt,
+                otherLanguageName,
+                cultureRoutes: getCultureRoutes(currentPage),
+                fallbackRoutes,
+              }}
             />
           </div>
-          <MobileNavSheet
-            nav={nav}
-            logo={getMedia(props.logoOnLight)}
-            logoAlt={logoAlt}
-            language={{
-              culture,
-              otherFlag,
-              otherFlagAlt,
-              otherLanguageName,
-              cultureRoutes: getCultureRoutes(currentPage),
-              fallbackRoutes,
-            }}
-          />
         </div>
       </div>
     </header>
   );
 }
+
