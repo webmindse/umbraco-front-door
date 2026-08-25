@@ -8,6 +8,7 @@ import Cards from "./Cards";
 import Counters from "./Counters";
 import DownloadList from "./DownloadList";
 import DynamicContentListing from "./DynamicContentListing";
+import FilteredDynamicContentListing from "./FilteredDynamicContentListing";
 import Hero from "./Hero";
 import ImageBlock from "./ImageBlock";
 import LatestFromFeed from "./LatestFromFeed";
@@ -49,6 +50,7 @@ export const blockRegistry: Record<string, BlockComponent> = {
   downloadList: DownloadList as BlockComponent,
   latestFromFeed: LatestFromFeed as BlockComponent,
   dynamicContentListing: DynamicContentListing as BlockComponent,
+  filteredDynamicContentListing: FilteredDynamicContentListing as BlockComponent,
 };
 
 /**
@@ -59,4 +61,6 @@ export const blockRegistry: Record<string, BlockComponent> = {
 export const silentBlockAliases: ReadonlySet<string> = new Set([
   "footerNavigationItem",
   "downloadListFile",
+  "filteredSegment",
+  "filterGroup",
 ]);
