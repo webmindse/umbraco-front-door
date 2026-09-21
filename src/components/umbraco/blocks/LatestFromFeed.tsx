@@ -141,7 +141,7 @@ export default function LatestFromFeed({ content, settings }: BlockComponentProp
 
           {buttonLink ? (
             <div className="mt-12 flex justify-center">
-              <Button asChild size="lg" variant={variantFor(buttonColor)}>
+              <Button asChild size="default" variant={variantFor(buttonColor)}>
                 <span>
                   <UmbracoLink link={buttonLink as unknown as JsonObject}>
                     {buttonLink.title}
