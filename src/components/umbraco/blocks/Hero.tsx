@@ -134,15 +134,8 @@ function HeroButton({
   if (!link) return null;
   const variant = variantFor(color);
   return (
-    <Button
-      asChild
-      size="lg"
-      variant={variant}
-      className={cn(
-        variant === "outline" &&
-          "bg-transparent text-text-light border-text-light hover:bg-text-light/10 hover:text-text-light",
-      )}
-    >
+    <Button asChild size="lg" variant={variant}>
+
       <span>
         <UmbracoLink link={link as unknown as JsonObject}>{link.title}</UmbracoLink>
       </span>
