@@ -45,17 +45,6 @@ function bgClasses(color: BgColor): { wrap: string; light: boolean } {
   }
 }
 
-function variantFor(color: string | null | undefined) {
-  switch (color) {
-    case "Secondary":
-      return "secondary" as const;
-    case "Transparent":
-      return "outline" as const;
-    default:
-      return "default" as const;
-  }
-}
-
 function PostGrid({
   feed,
   take,
