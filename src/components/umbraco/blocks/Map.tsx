@@ -84,8 +84,14 @@ export default function MapBlock({ content, settings }: BlockComponentProps) {
   const besideItems = c.contentBeside?.items ?? [];
   const hasBeside = besideItems.length > 0;
 
-  const heightStyle =
-    s.height && /^\d+(px|vh|rem)$/.test(s.height) ? { height: s.height } : undefined;
+  const heightStyle = s.height
+    ? /^\d+(px|vh|rem)$/.test(s.height)
+      ? { height: s.height }
+      : /^\d+%$/.test(s.height)
+        ? { height: `${Number(s.height.replace("%", ""))}vh` }
+        : undefined
+    : undefined;
+
 
   const mapPane =
     lat !== null && lng !== null ? (
