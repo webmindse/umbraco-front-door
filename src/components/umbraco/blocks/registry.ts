@@ -14,6 +14,7 @@ import Hero from "./Hero";
 import ImageBlock from "./ImageBlock";
 import LatestFromFeed from "./LatestFromFeed";
 import MapBlock from "./Map";
+import NodePicker from "./NodePicker";
 import Quote from "./Quote";
 import Text from "./Text";
 import TextAndMedia from "./TextAndMedia";
