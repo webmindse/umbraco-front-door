@@ -130,7 +130,6 @@ export default function Accordion({ content, settings }: BlockComponentProps) {
                   >
                     <RichTextRenderer
                       value={c.text}
-                      
                     />
                   </AccordionContent>
                 </AccordionItem>
