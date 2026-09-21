@@ -16,6 +16,7 @@ import LatestFromFeed from "./LatestFromFeed";
 import MapBlock from "./Map";
 import NodePicker from "./NodePicker";
 import Quote from "./Quote";
+import SectionNavigation from "./SectionNavigation";
 import Text from "./Text";
 import TextAndMedia from "./TextAndMedia";
 import Video from "./Video";
@@ -57,6 +58,7 @@ export const blockRegistry: Record<string, BlockComponent> = {
   dynamicContentListing: DynamicContentListing as BlockComponent,
   filteredDynamicContentListing: FilteredDynamicContentListing as BlockComponent,
   nodePicker: NodePicker as BlockComponent,
+  sectionNavigation: SectionNavigation as BlockComponent,
 };
 
 /**
@@ -69,4 +71,5 @@ export const silentBlockAliases: ReadonlySet<string> = new Set([
   "downloadListFile",
   "filteredSegment",
   "filterGroup",
+  "sectionNavigationItem",
 ]);
