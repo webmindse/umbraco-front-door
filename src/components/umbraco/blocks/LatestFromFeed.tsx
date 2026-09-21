@@ -131,7 +131,6 @@ export default function LatestFromFeed({ content, settings }: BlockComponentProp
                   value={introText}
                   className={cn(
                     "prose-sm md:prose-base mt-4 leading-relaxed",
-                    light && "prose-invert prose-p:text-text-light/90",
                   )}
                 />
               ) : null}

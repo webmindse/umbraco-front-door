@@ -263,3 +263,24 @@
     transform: scale(1.06);
   }
 }
+
+/* Rich text inherits the surrounding text colour so blocks only need to set
+   one background/contrast pair. Applied by default in RichTextRenderer. */
+@utility prose-inherit {
+  --tw-prose-body: currentColor;
+  --tw-prose-headings: currentColor;
+  --tw-prose-lead: color-mix(in oklab, currentColor 85%, transparent);
+  --tw-prose-links: currentColor;
+  --tw-prose-bold: currentColor;
+  --tw-prose-counters: color-mix(in oklab, currentColor 75%, transparent);
+  --tw-prose-bullets: color-mix(in oklab, currentColor 45%, transparent);
+  --tw-prose-hr: color-mix(in oklab, currentColor 25%, transparent);
+  --tw-prose-quotes: currentColor;
+  --tw-prose-quote-borders: color-mix(in oklab, currentColor 25%, transparent);
+  --tw-prose-captions: color-mix(in oklab, currentColor 70%, transparent);
+  --tw-prose-code: currentColor;
+  --tw-prose-pre-code: currentColor;
+  --tw-prose-pre-bg: color-mix(in oklab, currentColor 8%, transparent);
+  --tw-prose-th-borders: color-mix(in oklab, currentColor 35%, transparent);
+  --tw-prose-td-borders: color-mix(in oklab, currentColor 20%, transparent);
+}

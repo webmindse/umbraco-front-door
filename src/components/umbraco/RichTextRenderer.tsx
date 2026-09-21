@@ -38,7 +38,7 @@ export function RichTextRenderer({ value, className }: RichTextRendererProps) {
 
   return (
     <div
-      className={`prose prose-neutral max-w-none dark:prose-invert ${className ?? ""}`}
+      className={`prose prose-neutral prose-inherit max-w-none ${className ?? ""}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

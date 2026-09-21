@@ -91,7 +91,7 @@ export default function DownloadList({ content, settings }: BlockComponentProps)
         {text ? (
           <RichTextRenderer
             value={text}
-            className={cn("mt-4", light && "prose-invert")}
+            className="mt-4"
           />
         ) : null}
 

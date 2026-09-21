@@ -163,7 +163,7 @@ export default function MapBlock({ content, settings }: BlockComponentProps) {
           {c.text ? (
             <RichTextRenderer
               value={c.text as JsonObject}
-              className="mt-5 prose-sm text-current md:prose-base prose-headings:!text-current prose-p:!text-current prose-p:opacity-90 prose-strong:!text-current prose-a:!text-current"
+              className="mt-5 prose-sm md:prose-base prose-p:opacity-90"
             />
           ) : null}
           {contactRows.length ? (
