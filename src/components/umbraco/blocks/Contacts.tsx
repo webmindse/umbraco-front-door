@@ -47,7 +47,7 @@ export default function Contacts({ content, settings }: BlockComponentProps) {
 
   const cards = c.contactCards?.items ?? [];
   const hasText = Boolean(c.text);
-  const wrap = bgClasses(s.backgroundColor);
+  const wrap = bgClasses(s.backgroundColor ?? "None");
   const fullBg = !!s.fullWidth && !!wrap;
 
   return (
