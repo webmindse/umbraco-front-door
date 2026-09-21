@@ -47,7 +47,22 @@ function num(value: string | number | null | undefined): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-function mapSrc(lat: number, lng: number, zoom: number): string {
+function isUsableKey(key: string | null | undefined): key is string {
+  if (!key) return false;
+  const k = key.trim();
+  if (!k || k.startsWith("@secret:") || k.startsWith("$")) return false;
+  return /^AIza[0-9A-Za-z_-]{20,}$/.test(k);
+}
+
+function mapSrc(lat: number, lng: number, zoom: number, key?: string | null): string {
+  if (isUsableKey(key)) {
+    const params = new URLSearchParams({
+      key: key.trim(),
+      q: `${lat},${lng}`,
+      zoom: String(zoom),
+    });
+    return `https://www.google.com/maps/embed/v1/place?${params.toString()}`;
+  }
   const params = new URLSearchParams({
     q: `${lat},${lng}`,
     z: String(zoom),
@@ -55,6 +70,7 @@ function mapSrc(lat: number, lng: number, zoom: number): string {
   });
   return `https://maps.google.com/maps?${params.toString()}`;
 }
+
 
 export default function MapBlock({ content, settings }: BlockComponentProps) {
   const c = content as unknown as MapContent;
@@ -68,8 +84,14 @@ export default function MapBlock({ content, settings }: BlockComponentProps) {
   const besideItems = c.contentBeside?.items ?? [];
   const hasBeside = besideItems.length > 0;
 
-  const heightStyle =
-    s.height && /^\d+(px|vh|rem)$/.test(s.height) ? { height: s.height } : undefined;
+  const heightStyle = s.height
+    ? /^\d+(px|vh|rem)$/.test(s.height)
+      ? { height: s.height }
+      : /^\d+%$/.test(s.height)
+        ? { height: `${Number(s.height.replace("%", ""))}vh` }
+        : undefined
+    : undefined;
+
 
   const mapPane =
     lat !== null && lng !== null ? (
@@ -79,7 +101,7 @@ export default function MapBlock({ content, settings }: BlockComponentProps) {
       >
         <iframe
           title={c.heading ?? "Map"}
-          src={mapSrc(lat, lng, zoom)}
+          src={mapSrc(lat, lng, zoom, s.googleMapsKey)}
           className="h-full w-full border-0"
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
