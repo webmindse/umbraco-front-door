@@ -85,7 +85,7 @@ export default function Contacts({ content, settings }: BlockComponentProps) {
                       <UmbracoImage
                         media={media}
                         width={480}
-                        fill
+                        height={480}
                         alt={props.fullName ?? media.name}
                         className="h-full w-full object-cover"
                       />
