@@ -136,7 +136,7 @@ export default function MapBlock({ content, settings }: BlockComponentProps) {
   const contentPane = (
     <div
       className={cn(
-        "flex flex-col justify-center px-6 py-12 md:px-12 lg:px-16 lg:py-20",
+        "flex h-full flex-col justify-center px-6 py-12 md:px-12 lg:px-16 lg:py-20",
         bgClasses(s.backgroundColor),
       )}
     >
