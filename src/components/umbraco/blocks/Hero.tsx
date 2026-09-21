@@ -112,18 +112,6 @@ ${end.toFixed(2)}% { transform: translateY(${nextTranslate}%); }`;
 }
 
 
-function variantFor(color: ButtonColor | undefined) {
-  switch (color) {
-    case "Secondary":
-      return "secondary" as const;
-    case "Transparent":
-      return "outline" as const;
-    case "Primary":
-    default:
-      return "default" as const;
-  }
-}
-
 function HeroButton({
   link,
   color,
@@ -132,7 +120,9 @@ function HeroButton({
   color: ButtonColor | undefined;
 }) {
   if (!link) return null;
-  const variant = variantFor(color);
+  // The hero always sits on the secondary background, so a button whose
+  // colour would match the panel falls back to the outlined style.
+  const variant = buttonVariantFor(color, "secondary");
   return (
     <Button asChild size="lg" variant={variant}>
 
