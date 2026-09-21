@@ -50,28 +50,22 @@ interface TextAndMediaSettings {
   loop?: boolean;
 }
 
-function variantFor(color: ButtonColor | undefined) {
-  switch (color) {
-    case "Secondary":
-      return "secondary" as const;
-    case "Transparent":
-      return "outline" as const;
-    case "Primary":
-    default:
-      return "default" as const;
-  }
-}
-
 function TmButton({
   link,
   color,
+  onColoredPanel,
 }: {
   link: UmbracoLinkPickerItem | undefined;
   color: ButtonColor | undefined;
+  onColoredPanel?: boolean;
 }) {
   if (!link) return null;
   return (
-    <Button asChild size="default" variant={variantFor(color)}>
+    <Button
+      asChild
+      size="default"
+      variant={buttonVariantFor(color, onColoredPanel ? "secondary" : null)}
+    >
       <span>
         <UmbracoLink link={link as unknown as JsonObject}>{link.title}</UmbracoLink>
       </span>

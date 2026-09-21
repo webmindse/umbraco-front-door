@@ -86,7 +86,7 @@ export default function LatestFromFeed({ content, settings }: BlockComponentProp
     buttonColor,
   } = content as unknown as LatestFromFeedContent;
   const s = (settings ?? {}) as unknown as LatestFromFeedSettings;
-  const { wrap, light } = bgClasses(s.backgroundColor ?? "None");
+  const { wrap } = bgClasses(s.backgroundColor ?? "None");
   const panel =
     s.backgroundColor === "Primary"
       ? ("primary" as const)
