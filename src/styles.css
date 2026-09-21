@@ -222,9 +222,12 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    color: var(--text-dark);
+    /* Inherit the surrounding panel's text colour so headings stay readable
+       on coloured backgrounds. Body already sets the default foreground. */
+    color: inherit;
     letter-spacing: -0.01em;
   }
+
 
   hr {
     margin-top: 1rem;
