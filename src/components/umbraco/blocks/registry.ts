@@ -5,6 +5,7 @@ import type { BlockItem, JsonObject } from "@/integrations/umbraco/types";
 import Accordion from "./Accordion";
 import Card from "./Card";
 import Cards from "./Cards";
+import Contacts from "./Contacts";
 import Counters from "./Counters";
 import DownloadList from "./DownloadList";
 import DynamicContentListing from "./DynamicContentListing";
@@ -40,6 +41,7 @@ export type BlockComponent = ComponentType<BlockComponentProps>;
 export const blockRegistry: Record<string, BlockComponent> = {
   hero: Hero as BlockComponent,
   cards: Cards as BlockComponent,
+  contacts: Contacts as BlockComponent,
   card: Card as BlockComponent,
   textAndMedia: TextAndMedia as BlockComponent,
   accordion: Accordion as BlockComponent,
