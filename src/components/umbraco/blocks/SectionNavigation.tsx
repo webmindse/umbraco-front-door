@@ -35,8 +35,22 @@ function panelClasses(color: BackgroundColor) {
     case "Secondary":
       return "bg-background-secondary text-background-secondary-contrast";
     case "Primary":
-    default:
       return "bg-background-primary text-background-primary-contrast";
+    case "None":
+    default:
+      return "bg-transparent text-foreground";
+  }
+}
+
+function activeTabClasses(color: BackgroundColor) {
+  switch (color) {
+    case "Secondary":
+      return "data-[state=active]:bg-background-secondary data-[state=active]:text-background-secondary-contrast";
+    case "Primary":
+      return "data-[state=active]:bg-background-primary data-[state=active]:text-background-primary-contrast";
+    case "None":
+    default:
+      return "data-[state=active]:bg-background data-[state=active]:text-foreground";
   }
 }
 
@@ -54,7 +68,9 @@ export default function SectionNavigation({
 
   if (!items.length) return null;
 
-  const panel = panelClasses(s.backgroundColor ?? "Primary");
+  const backgroundColor = s.backgroundColor ?? "None";
+  const panel = panelClasses(backgroundColor);
+  const activeTab = activeTabClasses(backgroundColor);
   const firstItemId = items[0]?.content.id;
   if (!firstItemId) return null;
 
@@ -66,53 +82,51 @@ export default function SectionNavigation({
       )}
     >
       <Tabs defaultValue={firstItemId} className="w-full">
-        <div className="overflow-x-auto">
-          <TabsList
-            aria-label="Sections"
-            className={cn(
-              "mx-auto flex h-auto w-max min-w-full items-stretch justify-center gap-1 rounded-none bg-transparent p-0",
-              s.boxed && "max-w-5xl",
-            )}
-          >
-            {items.map((item) => {
-              const itemContent = item.content.properties as unknown as SectionNavigationItemContent;
-              return (
-                <TabsTrigger
-                  key={item.content.id}
-                  value={item.content.id}
-                  className={cn(
-                    "min-h-20 min-w-36 flex-1 rounded-none border border-transparent bg-muted px-8 py-5 text-base text-muted-foreground shadow-none",
-                    "hover:bg-muted/80 hover:text-foreground",
-                    "data-[state=active]:border-transparent data-[state=active]:shadow-none",
-                    s.backgroundColor === "Secondary"
-                      ? "data-[state=active]:bg-background-secondary data-[state=active]:text-background-secondary-contrast"
-                      : "data-[state=active]:bg-background-primary data-[state=active]:text-background-primary-contrast",
-                  )}
-                >
-                  {itemContent.sectionName ?? ""}
-                </TabsTrigger>
-              );
-            })}
-          </TabsList>
-        </div>
-
-        {items.map((item) => {
-          const itemContent = item.content.properties as unknown as SectionNavigationItemContent;
-          return (
-            <TabsContent
-              key={item.content.id}
-              value={item.content.id}
+        <div className={cn("w-full", s.boxed && "mx-auto max-w-5xl")}>
+          <div className="overflow-x-auto">
+            <TabsList
+              aria-label="Sections"
               className={cn(
-                "mt-0 min-h-64 px-2 py-10 md:px-8 md:py-14",
-                panel,
-                s.border && "border border-border",
-                s.boxed && "mx-auto max-w-5xl",
+                "flex h-auto w-full min-w-max items-stretch justify-center gap-1 rounded-none bg-transparent p-0",
               )}
             >
-              <BlockListRenderer items={itemContent.widgets?.items} />
-            </TabsContent>
-          );
-        })}
+              {items.map((item) => {
+                const itemContent = item.content.properties as unknown as SectionNavigationItemContent;
+                return (
+                  <TabsTrigger
+                    key={item.content.id}
+                    value={item.content.id}
+                    className={cn(
+                      "min-h-20 min-w-36 flex-1 rounded-none border border-transparent bg-muted px-8 py-5 text-base text-muted-foreground shadow-none",
+                      "hover:bg-muted/80 hover:text-foreground",
+                      "data-[state=active]:border-transparent data-[state=active]:shadow-none",
+                      activeTab,
+                    )}
+                  >
+                    {itemContent.sectionName ?? ""}
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
+          </div>
+
+          {items.map((item) => {
+            const itemContent = item.content.properties as unknown as SectionNavigationItemContent;
+            return (
+              <TabsContent
+                key={item.content.id}
+                value={item.content.id}
+                className={cn(
+                  "mt-0 min-h-64 px-2 py-10 md:px-8 md:py-14",
+                  panel,
+                  s.border && "border border-border",
+                )}
+              >
+                <BlockListRenderer items={itemContent.widgets?.items} />
+              </TabsContent>
+            );
+          })}
+        </div>
       </Tabs>
     </section>
   );
