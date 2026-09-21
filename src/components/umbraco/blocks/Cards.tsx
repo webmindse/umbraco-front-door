@@ -22,7 +22,7 @@ export default function Cards({ content }: BlockComponentProps) {
               <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">{title}</h2>
             ) : null}
             {text ? (
-              <p className="mt-4 text-base text-muted-foreground">{text}</p>
+              <p className="mt-4 text-base text-current/80">{text}</p>
             ) : null}
           </div>
         )}
