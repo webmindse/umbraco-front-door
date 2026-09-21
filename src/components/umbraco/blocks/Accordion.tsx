@@ -130,7 +130,7 @@ export default function Accordion({ content, settings }: BlockComponentProps) {
                   >
                     <RichTextRenderer
                       value={c.text}
-                      className={cn(light && "prose-invert")}
+                      
                     />
                   </AccordionContent>
                 </AccordionItem>
