@@ -47,26 +47,13 @@ function num(value: string | number | null | undefined): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-/** A key the editor never filled in (e.g. a leftover `@secret:NAME` marker). */
-function usableKey(key: string | null | undefined): string | null {
-  const k = key?.trim();
-  if (!k || k.startsWith("@secret:") || k.startsWith("$")) return null;
-  return k;
-}
-
-function mapSrc(lat: number, lng: number, zoom: number, key: string | null): string {
-  if (key) {
-    const params = new URLSearchParams({
-      key,
-      q: `${lat},${lng}`,
-      zoom: String(zoom),
-    });
-    return `https://www.google.com/maps/embed/v1/place?${params.toString()}`;
-  }
-  // Keyless fallback: OpenStreetMap with a marker.
-  const span = 0.6 / Math.pow(2, zoom - 12);
-  const bbox = [lng - span, lat - span / 2, lng + span, lat + span / 2].join(",");
-  return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lng}`;
+function mapSrc(lat: number, lng: number, zoom: number): string {
+  const params = new URLSearchParams({
+    q: `${lat},${lng}`,
+    z: String(zoom),
+    output: "embed",
+  });
+  return `https://maps.google.com/maps?${params.toString()}`;
 }
 
 export default function MapBlock({ content, settings }: BlockComponentProps) {
@@ -76,7 +63,6 @@ export default function MapBlock({ content, settings }: BlockComponentProps) {
   const lat = num(s.latitude);
   const lng = num(s.longitude);
   const zoom = num(s.zoom) ?? 14;
-  const key = usableKey(s.googleMapsKey);
   const contentRight = (s.contentPlacement ?? "Right") !== "Left";
 
   const besideItems = c.contentBeside?.items ?? [];
@@ -93,7 +79,7 @@ export default function MapBlock({ content, settings }: BlockComponentProps) {
       >
         <iframe
           title={c.heading ?? "Map"}
-          src={mapSrc(lat, lng, zoom, key)}
+          src={mapSrc(lat, lng, zoom)}
           className="h-full w-full border-0"
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
@@ -145,17 +131,17 @@ export default function MapBlock({ content, settings }: BlockComponentProps) {
       ) : (
         <>
           {c.preHeading ? (
-            <p className="mb-3 text-sm font-medium uppercase tracking-[0.25em] opacity-80">
+            <p className="mb-3 text-sm font-medium uppercase tracking-[0.25em] text-current opacity-80">
               {c.preHeading}
             </p>
           ) : null}
           {c.heading ? (
-            <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">{c.heading}</h2>
+            <h2 className="text-3xl font-semibold tracking-tight text-current md:text-4xl">{c.heading}</h2>
           ) : null}
           {c.text ? (
             <RichTextRenderer
               value={c.text as JsonObject}
-              className="mt-5 prose-sm md:prose-base prose-p:opacity-90 prose-headings:text-current prose-p:text-current prose-strong:text-current prose-a:text-current"
+              className="mt-5 prose-sm text-current md:prose-base prose-headings:!text-current prose-p:!text-current prose-p:opacity-90 prose-strong:!text-current prose-a:!text-current"
             />
           ) : null}
           {contactRows.length ? (
