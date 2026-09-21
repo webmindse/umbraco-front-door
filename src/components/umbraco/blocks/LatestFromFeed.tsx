@@ -87,6 +87,12 @@ export default function LatestFromFeed({ content, settings }: BlockComponentProp
   } = content as unknown as LatestFromFeedContent;
   const s = (settings ?? {}) as unknown as LatestFromFeedSettings;
   const { wrap, light } = bgClasses(s.backgroundColor ?? "None");
+  const panel =
+    s.backgroundColor === "Primary"
+      ? ("primary" as const)
+      : s.backgroundColor === "Secondary"
+        ? ("secondary" as const)
+        : null;
 
   const feed = feedPage?.[0];
   const take = Number(s.numberOfPosts ?? numberOfPosts ?? 3) || 3;
@@ -131,7 +137,7 @@ export default function LatestFromFeed({ content, settings }: BlockComponentProp
 
           {buttonLink ? (
             <div className="mt-12 flex justify-center">
-              <Button asChild size="default" variant={variantFor(buttonColor)}>
+              <Button asChild size="default" variant={buttonVariantFor(buttonColor, panel)}>
                 <span>
                   <UmbracoLink link={buttonLink as unknown as JsonObject}>
                     {buttonLink.title}
