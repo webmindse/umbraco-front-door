@@ -8,6 +8,7 @@ import type { ContentItem, JsonObject } from "@/integrations/umbraco/types";
 import { inferCultureFromPath } from "@/lib/culture";
 import { cn } from "@/lib/utils";
 
+import { buttonVariantFor } from "./button-variant";
 import type { BlockComponentProps } from "./registry";
 
 type BgColor = "None" | "Primary" | "Secondary" | string | null;
