@@ -12,6 +12,7 @@ import FilteredDynamicContentListing from "./FilteredDynamicContentListing";
 import Hero from "./Hero";
 import ImageBlock from "./ImageBlock";
 import LatestFromFeed from "./LatestFromFeed";
+import MapBlock from "./Map";
 import Quote from "./Quote";
 import Text from "./Text";
 import TextAndMedia from "./TextAndMedia";
@@ -49,6 +50,7 @@ export const blockRegistry: Record<string, BlockComponent> = {
   video: Video as BlockComponent,
   downloadList: DownloadList as BlockComponent,
   latestFromFeed: LatestFromFeed as BlockComponent,
+  map: MapBlock as BlockComponent,
   dynamicContentListing: DynamicContentListing as BlockComponent,
   filteredDynamicContentListing: FilteredDynamicContentListing as BlockComponent,
 };
