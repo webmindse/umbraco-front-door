@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import type { JsonObject } from "@/integrations/umbraco/types";
 import { cn } from "@/lib/utils";
 
+import { buttonVariantFor } from "./button-variant";
 import type { BlockComponentProps } from "./registry";
 
 type ButtonColor = "Primary" | "Secondary" | "Transparent" | string;
@@ -50,28 +51,22 @@ interface TextAndMediaSettings {
   loop?: boolean;
 }
 
-function variantFor(color: ButtonColor | undefined) {
-  switch (color) {
-    case "Secondary":
-      return "secondary" as const;
-    case "Transparent":
-      return "outline" as const;
-    case "Primary":
-    default:
-      return "default" as const;
-  }
-}
-
 function TmButton({
   link,
   color,
+  onColoredPanel,
 }: {
   link: UmbracoLinkPickerItem | undefined;
   color: ButtonColor | undefined;
+  onColoredPanel?: boolean;
 }) {
   if (!link) return null;
   return (
-    <Button asChild size="default" variant={variantFor(color)}>
+    <Button
+      asChild
+      size="default"
+      variant={buttonVariantFor(color, onColoredPanel ? "secondary" : null)}
+    >
       <span>
         <UmbracoLink link={link as unknown as JsonObject}>{link.title}</UmbracoLink>
       </span>
@@ -279,8 +274,16 @@ export default function TextAndMedia({ content, settings }: BlockComponentProps)
       {text ? <RichTextRenderer value={text} className="mt-4" /> : null}
       {(buttonOne?.[0] || buttonTwo?.[0]) && (
         <div className={cn("mt-6 flex flex-wrap gap-3", buttonsJustify)}>
-          <TmButton link={buttonOne?.[0] ?? undefined} color={buttonOneColor} />
-          <TmButton link={buttonTwo?.[0] ?? undefined} color={buttonTwoColor} />
+          <TmButton
+            link={buttonOne?.[0] ?? undefined}
+            color={buttonOneColor}
+            onColoredPanel={!!s.applyBackgroundColor}
+          />
+          <TmButton
+            link={buttonTwo?.[0] ?? undefined}
+            color={buttonTwoColor}
+            onColoredPanel={!!s.applyBackgroundColor}
+          />
         </div>
       )}
     </div>

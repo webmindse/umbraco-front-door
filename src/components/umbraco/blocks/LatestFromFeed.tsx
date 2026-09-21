@@ -8,6 +8,7 @@ import type { ContentItem, JsonObject } from "@/integrations/umbraco/types";
 import { inferCultureFromPath } from "@/lib/culture";
 import { cn } from "@/lib/utils";
 
+import { buttonVariantFor } from "./button-variant";
 import type { BlockComponentProps } from "./registry";
 
 type BgColor = "None" | "Primary" | "Secondary" | string | null;
@@ -41,17 +42,6 @@ function bgClasses(color: BgColor): { wrap: string; light: boolean } {
       return { wrap: "bg-background-secondary text-background-secondary-contrast", light: true };
     default:
       return { wrap: "", light: false };
-  }
-}
-
-function variantFor(color: string | null | undefined) {
-  switch (color) {
-    case "Secondary":
-      return "secondary" as const;
-    case "Transparent":
-      return "outline" as const;
-    default:
-      return "default" as const;
   }
 }
 
@@ -96,7 +86,13 @@ export default function LatestFromFeed({ content, settings }: BlockComponentProp
     buttonColor,
   } = content as unknown as LatestFromFeedContent;
   const s = (settings ?? {}) as unknown as LatestFromFeedSettings;
-  const { wrap, light } = bgClasses(s.backgroundColor ?? "None");
+  const { wrap } = bgClasses(s.backgroundColor ?? "None");
+  const panel =
+    s.backgroundColor === "Primary"
+      ? ("primary" as const)
+      : s.backgroundColor === "Secondary"
+        ? ("secondary" as const)
+        : null;
 
   const feed = feedPage?.[0];
   const take = Number(s.numberOfPosts ?? numberOfPosts ?? 3) || 3;
@@ -141,7 +137,7 @@ export default function LatestFromFeed({ content, settings }: BlockComponentProp
 
           {buttonLink ? (
             <div className="mt-12 flex justify-center">
-              <Button asChild size="default" variant={variantFor(buttonColor)}>
+              <Button asChild size="default" variant={buttonVariantFor(buttonColor, panel)}>
                 <span>
                   <UmbracoLink link={buttonLink as unknown as JsonObject}>
                     {buttonLink.title}
