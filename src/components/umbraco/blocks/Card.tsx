@@ -96,7 +96,7 @@ export default function Card({ content, settings }: BlockComponentProps) {
 
   const containerClass = cn(
     "flex h-full flex-col overflow-hidden",
-    boxed && "rounded-lg bg-card shadow-md",
+    boxed && "rounded-lg bg-card text-card-foreground shadow-md",
     border && "border border-border",
     isLinked && "card-link transition hover:shadow-lg",
     mediaLeft && "md:grid md:grid-cols-[40%_1fr] md:items-stretch",
@@ -143,7 +143,7 @@ export default function Card({ content, settings }: BlockComponentProps) {
       {text ? (
         <RichTextRenderer
           value={text}
-          className={cn("mt-3 text-sm text-muted-foreground [&_p]:text-muted-foreground")}
+          className={cn("mt-3 text-sm text-current/80 [&_p]:text-current/80")}
         />
       ) : null}
 
