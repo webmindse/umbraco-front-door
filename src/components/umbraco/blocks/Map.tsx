@@ -101,7 +101,7 @@ export default function MapBlock({ content, settings }: BlockComponentProps) {
       >
         <iframe
           title={c.heading ?? "Map"}
-          src={mapSrc(lat, lng, zoom)}
+          src={mapSrc(lat, lng, zoom, s.googleMapsKey)}
           className="h-full w-full border-0"
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
