@@ -8,6 +8,7 @@ import { UmbracoLink, type UmbracoLinkPickerItem } from "@/components/umbraco/Um
 import type { JsonObject } from "@/integrations/umbraco/types";
 import { cn } from "@/lib/utils";
 
+import { buttonVariantFor } from "./button-variant";
 import type { BlockComponentProps } from "./registry";
 
 type ButtonColor = "Primary" | "Secondary" | "Transparent" | string;
