@@ -56,6 +56,7 @@ export const blockRegistry: Record<string, BlockComponent> = {
   map: MapBlock as BlockComponent,
   dynamicContentListing: DynamicContentListing as BlockComponent,
   filteredDynamicContentListing: FilteredDynamicContentListing as BlockComponent,
+  nodePicker: NodePicker as BlockComponent,
 };
 
 /**
